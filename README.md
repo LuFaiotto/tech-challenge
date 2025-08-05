@@ -7,4 +7,4 @@
 - Luana Tavares Faiotto – RM 362722
 
 ## Fase 2
-- [Link da apresentação dos modelos] (https://www.youtube.com/watch?v=AwJ0dbIeH4o)
+- [Link da apresentação dos modelos](https://www.youtube.com/watch?v=AwJ0dbIeH4o)
