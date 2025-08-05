@@ -1,5 +1,7 @@
 # Repositório Tech Challenge - FIAP 2025
 
+O repositório foi criado para agrupar todos os desafios realizados na pós-graduação de Data Analytics (9DTAT)
+
 ## Membros
 - Alfonso J. T. Rodriguez – RM 361699
 - Gabrielle Silva Santos – RM 361901
