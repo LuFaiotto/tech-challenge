@@ -10,3 +10,6 @@ O repositório foi criado para agrupar todos os desafios realizados na pós-grad
 
 ## Fase 2
 - [Link da apresentação dos modelos](https://www.youtube.com/watch?v=AwJ0dbIeH4o)
+
+## Fase 4
+- [Link do Dashboard sobre Obesidade](https://app.powerbi.com/view?r=eyJrIjoiZGQ4NDc5ZTctZTg4Mi00ZTI1LTkyNzctZmExOWM5MzdlODFlIiwidCI6IjFjMDE5MTkyLWI1NDItNDI4Zi05MDQyLWE0NzdiNTk1ZjVjMyJ9)
