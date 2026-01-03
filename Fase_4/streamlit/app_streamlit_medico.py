@@ -83,11 +83,17 @@ Por favor, foque em sugestões relacionadas a dieta, exercícios físicos e muda
     return prompt
 
 # --- carrega modelo ---
+base_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(base_dir, 'obesity_prediction_model_pipeline.pkl')
+label_path = os.path.join(base_dir, 'label_encoder.pkl')
 try:
-    loaded_model_pipeline = joblib.load('obesity_prediction_model_pipeline.pkl')
-    loaded_label_encoder = joblib.load('label_encoder.pkl')
+    loaded_model_pipeline = joblib.load(model_path)
+    loaded_label_encoder = joblib.load(label_path)
 except FileNotFoundError:
-    st.error("Erro: Arquivos do modelo ou do LabelEncoder não encontrados. Certifique-se de que 'obesity_prediction_model_pipeline.pkl' e 'label_encoder.pkl' estão no mesmo diretório do seu script Streamlit.")
+    st.error(
+        f"Erro: Arquivos do modelo ou do LabelEncoder não encontrados. Procurado: {model_path} e {label_path}.\n"
+        "Certifique-se de que 'obesity_prediction_model_pipeline.pkl' e 'label_encoder.pkl' estão no mesmo diretório do script Streamlit."
+    )
     st.stop()
 except AttributeError as e:
     st.error(f"Erro de compatibilidade da versão do scikit-learn ao carregar o modelo: {e}. Isso geralmente ocorre se o modelo foi salvo com uma versão diferente do scikit-learn. Por favor, re-execute as células que treinam e salvam o modelo (`FPCIueUFX41Y` a `vgHC6GJAaiEH`) e o label encoder neste ambiente para gerar arquivos compatíveis.")
@@ -292,3 +298,4 @@ if predict_button:
 
 else:
     st.info("Clique no botão 'Obter Predição e Conselhos' para processar suas informações!")
+
