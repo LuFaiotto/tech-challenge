@@ -299,3 +299,4 @@ if predict_button:
 else:
     st.info("Clique no botão 'Obter Predição e Conselhos' para processar suas informações!")
 
+
