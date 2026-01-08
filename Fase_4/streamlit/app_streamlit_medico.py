@@ -138,10 +138,12 @@ div.block-container {
 .stNumberInput > div,
 .stSelectbox > div,
 .stRadio > div {
-    max-width: 650px;          /* largura dos campos */
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 }
+
 
 .stButton {
     display: flex;
