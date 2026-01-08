@@ -116,7 +116,7 @@ else:
 # --- Configuração do Streamlit App  ---
 st.set_page_config(
     page_title="Predição de Nível de Obesidade e Suporte.",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded"
 )
 
@@ -125,6 +125,27 @@ css = """
 <style>
 body {
     background-color: #E6E6FA; /* Light purple */
+}
+
+div.block-container {
+    max-width: 1000px;         /* ajuste aqui para “tirar ~10cm” */
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.stTextInput > div,
+.stNumberInput > div,
+.stSelectbox > div,
+.stRadio > div {
+    max-width: 650px;          /* largura dos campos */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stButton {
+    display: flex;
+    justify-content: center;   /* centraliza o botão */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -298,4 +319,3 @@ if predict_button:
 
 else:
     st.info("Clique no botão 'Obter Predição e Suporte a Decisão.' para processar suas informações!")
-
