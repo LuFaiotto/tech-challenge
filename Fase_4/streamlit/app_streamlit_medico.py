@@ -115,7 +115,7 @@ else:
 
 # --- Configuração do Streamlit App  ---
 st.set_page_config(
-    page_title="Predição de Nível de Obesidade e Suporte",
+    page_title="Predição de Nível de Obesidade e Suporte.",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -147,7 +147,7 @@ h1, h2, h3, h4, h5, h6 {
 """
 st.markdown(css, unsafe_allow_html=True)
 
-st.title("Avaliação do Nível de Obesidade e Suporte a Decisão")
+st.title("Avaliação do Nível de Obesidade e Suporte a Decisão.")
 st.write("Preencha as informações do paciente abaixo para obter sua predição e recomendações.")
 
 # --- dados dos pacientes (Área principal) ---
@@ -294,8 +294,8 @@ if predict_button:
         st.info(f"O suporte a decisão foi salvo no banco de dados para acompanhamento médico.")
 
     except Exception as e:
-        st.error(f"Ocorreu um erro durante a predição ou geração de suporte: {e}")
+        st.error(f"Ocorreu um erro durante a predição ou geração de suporte.: {e}")
 
 else:
-    st.info("Clique no botão 'Obter Predição e Suporte a Decisão' para processar suas informações!")
+    st.info("Clique no botão 'Obter Predição e Suporte a Decisão.' para processar suas informações!")
 
