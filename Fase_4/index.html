@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Challenge - Fase 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #d1d4d9 0%, #8e9399 50%, #5c6166 100%);
+            overflow: hidden;
+        }
+
+        #main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            /* Espaçamento aumentado entre título e botões */
+            margin-bottom: 120px; 
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: linear-gradient(to bottom, #333, #000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px rgba(255,255,255,0.3));
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin: 0;
+            font-weight: 300;
+            letter-spacing: 10px;
+            color: #444;
+            text-transform: uppercase;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+
+        .btn-3d {
+            width: 300px;
+            height: 110px;
+            cursor: pointer;
+            background: linear-gradient(145deg, #e6e6e6, #ffffff);
+            border: 1px solid #bbb;
+            border-radius: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            box-shadow: 0 10px 0 #999, 0 20px 30px rgba(0,0,0,0.4), inset 0 2px 2px rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-3d:hover { transform: scale(1.03); background: linear-gradient(145deg, #ffffff, #f0f0f0); }
+        .btn-3d:active { box-shadow: 0 4px 0 #777, 0 8px 15px rgba(0,0,0,0.3); transform: translateY(8px); }
+
+        #system-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 1000;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        #back-button {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1001;
+            padding: 10px 30px;
+            background: #222;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        }
+
+        #back-button:hover { background: #ff4b4b; }
+    </style>
+</head>
+<body>
+
+    <div id="main-menu">
+        <header>
+            <h1>Obesidade</h1>
+            <h2>Data Analytics</h2>
+        </header>
+        
+        <div class="container">
+            <button type="button" class="btn-3d" onclick="openSystem('https://tech-challenge-fase4-obesidade.streamlit.app/?embed=true')">
+                Formulário Avaliativo
+            </button>
+            
+            <button type="button" class="btn-3d" onclick="openSystem('https://app.powerbi.com/view?r=eyJrIjoiZGQ4NDc5ZTctZTg4Mi00ZTI1LTkyNzctZmExOWM5MzdlODFlIiwidCI6IjFjMDE5MTkyLWI1NDItNDI4Zi05MDQyLWE0NzdiNTk1ZjVjMyJ9&pageName=ReportSection')">
+                Dashboard Estatísticas
+            </button>
+        </div>
+    </div>
+
+    <div id="system-overlay">
+        <button id="back-button" onclick="closeSystem()">VOLTAR</button>
+        <iframe id="system-frame" src=""></iframe>
+    </div>
+
+    <script>
+        function openSystem(url) {
+            const iframe = document.getElementById('system-frame');
+            const overlay = document.getElementById('system-overlay');
+            iframe.src = url;
+            overlay.style.display = 'block';
+        }
+
+        function closeSystem() {
+            const overlay = document.getElementById('system-overlay');
+            const iframe = document.getElementById('system-frame');
+            overlay.style.display = 'none';
+            iframe.src = ''; 
+        }
+    </script>
+</body>
+</html>
