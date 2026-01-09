@@ -15,3 +15,4 @@ O repositório foi criado para agrupar todos os desafios realizados na pós-grad
 - [Página Inicial - Fase 4](https://lufaiotto.github.io/tech-challenge/Fase_4/)
 - [Link do Dashboard sobre Obesidade](https://app.powerbi.com/view?r=eyJrIjoiZGQ4NDc5ZTctZTg4Mi00ZTI1LTkyNzctZmExOWM5MzdlODFlIiwidCI6IjFjMDE5MTkyLWI1NDItNDI4Zi05MDQyLWE0NzdiNTk1ZjVjMyJ9)
 - [Link do Formulário de Predição no Streamlit](https://tech-challenge-fase4-obesidade.streamlit.app)
+- [Link da apresentação](https://youtu.be/aGr4Ih86w4E)
