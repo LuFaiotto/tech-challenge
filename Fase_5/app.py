@@ -942,7 +942,7 @@ def display_question_9(df):
     st.markdown("O SHAP (SHapley Additive exPlanations) ajuda a entender como cada característica individual influencia a previsão do modelo para um aluno específico.")
 
     explainer = shap.TreeExplainer(model_risco)
-    shap_values = explainer.shap_values(X_risco)
+    shap_values_all = explainer.shap_values(X_risco)
 
     # Criar uma 'Fila de Prioridade' para alunos em risco
     df_q9['Prob_Risco'] = model_risco.predict_proba(X_risco)[:, 1]
@@ -958,20 +958,26 @@ def display_question_9(df):
             student_index = df_q9[df_q9['RA'] == selected_ra].index[0]
             st.write(f"**Fatores Contribuintes para o aluno RA: {selected_ra}**")
 
-            # Obter SHAP values para o aluno selecionado
-            shap_values_single = explainer.shap_values(X_risco.loc[[student_index]])[1] # [1] para a classe positiva (Em_Risco=1)
+            # Obter SHAP values para o aluno selecionado (para a classe positiva)
+            shap_values_single = shap_values_all[1][X_risco.index.get_loc(student_index)]
+            # Obter os valores das features para o aluno selecionado
+            features_single = X_risco.loc[student_index]
+            
             shap_df = pd.DataFrame({
                 'Feature': X_risco.columns,
-                'SHAP_Value': shap_values_single[0]
-            }).sort_values(by='SHAP_Value', ascending=False)
+                'SHAP_Value': shap_values_single
+            }).sort_values(by='SHAP_Value', key=abs, ascending=False)
 
             st.dataframe(shap_df)
 
-            # Plotar os SHAP values para o aluno selecionado
-            fig_shap, ax_shap = plt.subplots(figsize=(10, 6))
-            shap.plot_implosion(shap_values_single, feature_names=X_risco.columns, show=False)
-            # Use a função de plotagem do SHAP diretamente com st.pyplot
-            st.pyplot(plt.gcf())
+            fig_shap = plt.figure(figsize=(10, 6))
+            shap.plots.waterfall(shap.Explanation(
+                values=shap_values_single,
+                base_values=explainer.expected_value[1], # Expected value for the positive class
+                data=features_single.values,
+                feature_names=X_risco.columns.tolist()
+            ), show=False)
+            st.pyplot(fig_shap)
             plt.close(fig_shap)
     else:
         st.info("A fila de prioridade está vazia para seleção.")
@@ -1335,6 +1341,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
