@@ -942,7 +942,10 @@ def display_question_9(df):
     st.markdown("O SHAP (SHapley Additive exPlanations) ajuda a entender como cada característica individual influencia a previsão do modelo para um aluno específico.")
 
     explainer = shap.TreeExplainer(model_risco)
-    shap_values_all = explainer.shap_values(X_risco)
+    shap_values_raw = explainer.shap_values(X_risco) # This is a list of arrays
+
+    # Convert shap_values for positive class into a DataFrame with X_risco's index
+    shap_values_df = pd.DataFrame(shap_values_raw[1], columns=X_risco.columns, index=X_risco.index)
 
     # Criar uma 'Fila de Prioridade' para alunos em risco
     df_q9['Prob_Risco'] = model_risco.predict_proba(X_risco)[:, 1]
@@ -955,24 +958,26 @@ def display_question_9(df):
     if not fila_prioridade.empty:
         selected_ra = st.selectbox("Selecione um RA da fila de prioridade para ver os fatores contribuintes:", fila_prioridade['RA'].unique())
         if selected_ra:
-            # Get the original index label of the selected student
             student_original_label = df_q9[df_q9['RA'] == selected_ra].index[0]
             st.write(f"**Fatores Contribuintes para o aluno RA: {selected_ra}**")
 
-            # Find the integer positional index of this label within X_risco's index
-            # Using get_indexer for robustness to avoid misinterpretation of get_loc when index is non-RangeIndex
-            pos_in_X_risco = X_risco.index.get_indexer([student_original_label])[0]
+            # Directly get SHAP values for the selected student by label from the DataFrame
+            if student_original_label not in shap_values_df.index:
+                st.warning(f"O RA {selected_ra} (índice original {student_original_label}) não foi encontrado no DataFrame de valores SHAP. Pode haver uma inconsistência nos dados ou na indexação.")
+                return
 
-            shap_values_single = shap_values_all[1][pos_in_X_risco]
-            features_single = X_risco.loc[student_original_label] # Get the features for this student using the original label
+            shap_values_single = shap_values_df.loc[student_original_label].values # Get the numpy array from the Series
+
+            # Get the features for this student using the original label
+            features_single = X_risco.loc[student_original_label]
 
             shap_df = pd.DataFrame({
                 'Feature': X_risco.columns,
                 'SHAP_Value': shap_values_single
             }).sort_values(by='SHAP_Value', key=abs, ascending=False)
-
             st.dataframe(shap_df)
 
+            # Plotar os SHAP values para o aluno selecionado
             fig_shap = plt.figure(figsize=(10, 6))
             shap.plots.waterfall(shap.Explanation(
                 values=shap_values_single,
@@ -986,32 +991,33 @@ def display_question_9(df):
         st.info("A fila de prioridade está vazia para seleção.")
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
+    st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
 
-    prompt_gemini = f"""
-    Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
-    
-    **Desempenho do Modelo:**
-    - AUC do Modelo de Risco: {auc_risco:.3f}
+    if st.button("Gerar Insights do Gemini (Pergunta 9)"):
+        prompt_gemini = f"""
+        Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
+        
+        **Desempenho do Modelo:**
+        - AUC do Modelo de Risco: {auc_risco:.3f}
 
-    **Fila de Prioridade (Top 10 Alunos):**
-    ```
-    {fila_prioridade[['RA', 'Prob_Risco', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP']].to_string()}
-    ```
+        **Fila de Prioridade (Top 10 Alunos):**
+        ```
+        {fila_prioridade[['RA', 'Prob_Risco', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP']].to_string()}
+        ```
 
-    Com base nesses dados e no conceito de fatores contribuintes do SHAP, forneça:
-    1. Uma interpretação do desempenho do modelo (AUC).
-    2. Análise dos padrões dos alunos na fila de prioridade e os principais indicadores que os colocam em risco.
-    3. Sugestões de ações práticas e personalizadas para a 'Passos Mágicos' intervir com esses alunos de alto risco, focando nos indicadores que mais contribuem para o risco de defasagem (como indicado pelos SHAP values).
-    4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
-    """
+        Com base nesses dados e no conceito de fatores contribuintes do SHAP, forneça:
+        1. Uma interpretação do desempenho do modelo (AUC).
+        2. Análise dos padrões dos alunos na fila de prioridade e os principais indicadores que os colocam em risco.
+        3. Sugestões de ações práticas e personalizadas para a 'Passos Mágicos' intervir com esses alunos de alto risco, focando nos indicadores que mais contribuem para o risco de defasagem (como indicado pelos SHAP values).
+        4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
+        """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
+        gemini_insights = generate_gemini_insights(prompt_gemini)
 
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
 
 def display_question_10(df):
     st.header("Pergunta 10: Índice de Valor Adicionado (IVA)")
@@ -1344,6 +1350,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
