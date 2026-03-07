@@ -188,35 +188,33 @@ def display_question_4(df):
 
     # --- Geração de Insights com a API do Gemini ---
     st.subheader("Insights do Gemini sobre a Matriz de Perfil Psico-Pedagógico")
+    
+    prompt_gemini = f"""
+    Apresente uma análise do perfil psicopedagógico de alunos, divididos em quatro quadrantes com base em seu desempenho real (IDA) e autoavaliação (IAA).
+    O objetivo é identificar padrões e sugerir ações estratégicas para aprimorar o suporte aos estudantes.
 
-    if st.button("Gerar Insights do Gemini (Pergunta 4)"):
-    
-        prompt_gemini = f"""
-        Apresente uma análise do perfil psicopedagógico de alunos, divididos em quatro quadrantes com base em seu desempenho real (IDA) e autoavaliação (IAA).
-        O objetivo é identificar padrões e sugerir ações estratégicas para aprimorar o suporte aos estudantes.
-    
-        **Definições dos Quadrantes:**
-        - **Consciente**: Alunos com IDA Alta e IAA Alta. (Bom desempenho e boa auto-percepção)
-        - **Inseguro**: Alunos com IDA Alta e IAA Baixa. (Bom desempenho, mas auto-percepção baixa)
-        - **Iludido**: Alunos com IDA Baixa e IAA Alta. (Baixo desempenho, mas auto-percepção alta)
-        - **Em Risco**: Alunos com IDA Baixa e IAA Baixa. (Baixo desempenho e baixa auto-percepção)
-    
-        **Percentuais de Alunos por Quadrante:**
-        {quadrant_analysis_df.to_string()}
-    
-        Com base nesses dados, por favor, forneça:
-        1. Uma análise concisa do perfil predominante dos alunos.
-        2. Insights estratégicos específicos e recomendações de ações para cada um dos quatro grupos de alunos, considerando suas características.
-        3. Dê especial atenção aos grupos 'Iludido' e 'Em Risco'. Se o grupo 'Iludido' for significativo, discuta as implicações de uma autoavaliação inflacionada em relação ao desempenho real e como abordá-la. Se o grupo 'Em Risco' for significativo, proponha estratégias de intervenção urgentes.
-        4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
-        """
-    
-        gemini_insights = generate_gemini_insights(prompt_gemini)
-    
-        if gemini_insights:
-            st.markdown(gemini_insights)
-        else:
-            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    **Definições dos Quadrantes:**
+    - **Consciente**: Alunos com IDA Alta e IAA Alta. (Bom desempenho e boa auto-percepção)
+    - **Inseguro**: Alunos com IDA Alta e IAA Baixa. (Bom desempenho, mas auto-percepção baixa)
+    - **Iludido**: Alunos com IDA Baixa e IAA Alta. (Baixo desempenho, mas auto-percepção alta)
+    - **Em Risco**: Alunos com IDA Baixa e IAA Baixa. (Baixo desempenho e baixa auto-percepção)
+
+    **Percentuais de Alunos por Quadrante:**
+    {quadrant_analysis_df.to_string()}
+
+    Com base nesses dados, por favor, forneça:
+    1. Uma análise concisa do perfil predominante dos alunos.
+    2. Insights estratégicos específicos e recomendações de ações para cada um dos quatro grupos de alunos, considerando suas características.
+    3. Dê especial atenção aos grupos 'Iludido' e 'Em Risco'. Se o grupo 'Iludido' for significativo, discuta as implicações de uma autoavaliação inflacionada em relação ao desempenho real e como abordá-la. Se o grupo 'Em Risco' for significativo, proponha estratégias de intervenção urgentes.
+    4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
+    """
+
+    gemini_insights = generate_gemini_insights(prompt_gemini)
+
+    if gemini_insights:
+        st.markdown(gemini_insights)
+    else:
+        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 # Modified analyze_and_plot_queda_streamlit to return stats
 def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_cols=['Idade', 'Sexo', 'IEG', 'IDA']):
@@ -771,6 +769,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
