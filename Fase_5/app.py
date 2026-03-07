@@ -713,11 +713,34 @@ def main():
 
     if page == "Visão Geral":
         st.subheader("Bem-vindo(a) à Análise de Dados da Passos Mágicos")
-        st.write("Utilize o menu lateral para navegar entre as diferentes perguntas e insights gerados.")
-        st.write("Este dashboard interativo permite explorar as correlações, impactos e padrões nos dados de performance estudantil, autoavaliação, engajamento e aspectos psicossociais e psicopedagógicos.")
-        st.subheader("Dados Carregados e Limpos:")
+        st.write("Utilize o menu lateral para navegar entre as diferentes perguntas e insights gerados. Este dashboard interativo visa explorar as correlações, impactos e padrões nos dados de performance estudantil, autoavaliação, engajamento e aspectos psicossociais e psicopedagógicos.")
+
+        st.markdown("### Visão Geral do Projeto")
+        st.markdown("Este projeto teve como objetivo analisar dados de performance estudantil para a **Passos Mágicos**, buscando identificar padrões, correlações e insights acionáveis que possam otimizar suas operações e melhorar o suporte aos alunos.")
+
+        st.markdown("#### Preparação e Limpeza de Dados")
+        st.write("O primeiro passo envolveu o carregamento do dataset `PEDE_Completo_Normalizado.csv` e a limpeza rigorosa das colunas numéricas essenciais (IAA, IDA, IEG, IPS, IPV, IPP, IAN, INDE 2022, 2023, 2024). Valores como vírgulas foram substituídos por pontos e os tipos de dados foram convertidos para numéricos, garantindo a consistência para análises subsequentes.")
         st.write("As 5 primeiras linhas do DataFrame após a limpeza inicial das colunas numéricas:")
         st.dataframe(df[numeric_cols_to_clean].head())
+
+        st.markdown("#### Perguntas Chave e Principais Insights")
+        st.markdown("**Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)**")
+        st.write("Analisamos a coerência entre a percepção dos alunos sobre si mesmos e seu desempenho/engajamento. Correlações de Pearson e visualizações com linhas de 45 graus ajudam a identificar alunos superestimados, subestimados ou conscientes. Uma 'Matriz de Perfil Psico-Pedagógico' foi criada para categorizar alunos, com insights do Gemini para ações específicas.")
+
+        st.markdown("**Pergunta 5: Aspectos Psicossociais (IPS) e Quedas de Desempenho**")
+        st.write("Investigamos se fatores psicossociais podem prever quedas no Índice de Desenvolvimento do Aluno (INDE). Calculamos deltas do INDE, correlações entre IPS e variações do INDE, e utilizamos testes T e regressões logísticas para identificar padrões. Os insights do Gemini oferecem recomendações para mitigar essas quedas.")
+
+        st.markdown("**Pergunta 6: Aspectos Psicopedagógicos (IPP) e Defasagem (IAN)**")
+        st.write("Comparamos avaliações psicopedagógicas (IPP) com o Índice de Atraso de Desenvolvimento (IAN) para entender se confirmam ou contradizem a defasagem. Coeficientes de Pearson e testes T foram utilizados, com visualizações de dispersão e box plots. O Gemini fornece insights sobre as implicações práticas dessa relação.")
+
+        st.markdown("**Pergunta 8: Multidimensionalidade dos Indicadores**")
+        st.write("Determinamos quais combinações de indicadores (IDA, IEG, IPS, IPP) mais influenciam a nota global (INDE). Um modelo de Regressão Linear (OLS) foi aplicado, e os alunos foram segmentados em grupos de 'Baixo INDE' e 'Alto INDE' para comparação de perfis através de gráficos de radar. Insights do Gemini sugerem as melhores alavancas para elevar o INDE.")
+
+        st.markdown("**Pergunta 11: Insights Adicionais e Criatividade**")
+        st.write("Geramos sugestões práticas adicionais através de cruzamentos de dados. Isso incluiu a consolidação do INDE, análise de desempenho por tipo de instituição de ensino (pública vs. privada) e uma análise de palavras-chave nos destaques dos alunos para identificar desafios comuns. O Gemini compilou recomendações estratégicas baseadas nesses insights.")
+
+        st.markdown("#### Conclusão")
+        st.write("Este dashboard serve como uma ferramenta poderosa para a Passos Mágicos, convertendo dados brutos em inteligência acionável para apoiar seus alunos de forma mais eficaz e otimizar suas estratégias educacionais.")
 
     elif page == "Pergunta 4":
         display_question_4(df)
@@ -732,20 +755,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
