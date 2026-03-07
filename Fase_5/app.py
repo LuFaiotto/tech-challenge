@@ -955,7 +955,7 @@ def display_question_9(df):
     if not fila_prioridade.empty:
         selected_ra = st.selectbox("Selecione um RA da fila de prioridade para ver os fatores contribuintes:", fila_prioridade['RA'].unique())
         if selected_ra:
-             shap_values_single = shap_values_all[1][X_risco.index.get_loc(student_index)]
+            shap_values_single = shap_values_all[1][X_risco.index.get_loc(student_index)]
             st.write(f"**Fatores Contribuintes para o aluno RA: {selected_ra}**")
 
             # Find the integer positional index of this label within X_risco's index
@@ -1343,6 +1343,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
