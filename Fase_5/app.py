@@ -170,7 +170,6 @@ def display_question_1(df):
         st.metric("Média INDE", f"{df['INDE 2024'].mean():.2f}")
         st.metric("Desvio Padrão", f"{df['INDE 2024'].std():.2f}")
 
-    st.subheader("Observações")
     st.write("Observa-se que a média do INDE é 7,4, com desvio padrão de 1,01, indicando que os dados estão relativamente concentrados próximos à média. Isso demonstra que o desempenho geral dos alunos é estável, sem variações extremas muito acentuadas. A concentração dos valores em torno da faixa 7–8 indica que a maioria dos alunos apresenta desempenho considerado bom, com pequena dispersão entre os resultados.")
 
 def display_question_2(df):
@@ -199,6 +198,8 @@ def display_question_2(df):
     ax_evol.grid(alpha=0.3)
     st.pyplot(fig_evol)
     plt.close(fig_evol)
+
+    st.write("Observa-se tendência de crescimento no desempenho médio ao longo do tempo, indicando melhora progressiva dos resultados acadêmicos. Esse comportamento sugere que as estratégias educacionais aplicadas podem estar contribuindo positivamente para o avanço dos indicadores. A evolução consistente reforça um cenário de melhoria gradual no desempenho institucional.")
 
     # --- Cálculo do Índice de Volatilidade de Aprendizagem (IVA) ---
     st.subheader("Índice de Volatilidade de Aprendizagem (IVA) por Fase")
@@ -1313,6 +1314,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
