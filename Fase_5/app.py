@@ -955,14 +955,16 @@ def display_question_9(df):
     if not fila_prioridade.empty:
         selected_ra = st.selectbox("Selecione um RA da fila de prioridade para ver os fatores contribuintes:", fila_prioridade['RA'].unique())
         if selected_ra:
-            student_index = df_q9[df_q9['RA'] == selected_ra].index[0]
+             shap_values_single = shap_values_all[1][X_risco.index.get_loc(student_index)]
             st.write(f"**Fatores Contribuintes para o aluno RA: {selected_ra}**")
 
-            # Obter SHAP values para o aluno selecionado (para a classe positiva)
-            shap_values_single = shap_values_all[1][X_risco.index.get_loc(student_index)]
-            # Obter os valores das features para o aluno selecionado
-            features_single = X_risco.loc[student_index]
-            
+            # Find the integer positional index of this label within X_risco's index
+            # Using get_indexer for robustness to avoid misinterpretation of get_loc when index is non-RangeIndex
+            pos_in_X_risco = X_risco.index.get_indexer([student_original_label])[0]
+
+            shap_values_single = shap_values_all[1][pos_in_X_risco]
+            features_single = X_risco.loc[student_original_label] # Get the features for this student using the original label
+
             shap_df = pd.DataFrame({
                 'Feature': X_risco.columns,
                 'SHAP_Value': shap_values_single
@@ -1341,6 +1343,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
