@@ -7,4 +7,5 @@ scipy
 statsmodels
 scikit-learn
 plotly
+shap
 google-generativeai
