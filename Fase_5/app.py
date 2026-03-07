@@ -62,7 +62,7 @@ def generate_gemini_insights(prompt):
     if GEMINI_API_KEY is None:
         return "Erro: A chave da API do Gemini não está configurada. Por favor, configure-a nos Secrets do Colab."
     try:
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         response = model.generate_content(prompt)
         # Verifica se há conteúdo na resposta antes de tentar acessá-lo
         if response.candidates:
@@ -756,6 +756,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
