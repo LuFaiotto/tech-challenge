@@ -235,7 +235,7 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
     grp1 = data.loc[data[queda_col] == True, ips_col].dropna()
     grp0 = data.loc[data[queda_col] == False, ips_col].dropna()
     if len(grp1) > 1 and len(grp0) > 1:
-        tstat, pval = ttest_ind(grp1, grp0, grp0, equal_var=False)
+        tstat, pval = ttest_ind(grp1, grp0, equal_var=False)
         st.write(f"**Teste T de IPS (queda vs. sem queda):** t = {tstat:.3f}, p = {pval:.4f}")
         results_for_prompt['ttest_results'] = f"t = {tstat:.3f}, p = {pval:.4f}"
     else:
@@ -756,6 +756,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
