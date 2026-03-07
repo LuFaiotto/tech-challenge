@@ -12,39 +12,26 @@ from collections import defaultdict
 import plotly.express as px
 import os
 
-# Gemini API imports and configuration
 import google.generativeai as genai
 
-# Definindo as colunas numéricas que precisam de tratamento globalmente
 numeric_cols_to_clean = [
     "IAA", "IDA", "IEG", "IPS", "IPV", "IPP", "IAN",
     "INDE 2022", "INDE 2023", "INDE 2024"
 ]
 
-# Função para converter e limpar colunas numéricas
 def clean_numeric_column(series):
     return pd.to_numeric(series.astype(str).str.replace(',', '.'), errors='coerce')
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 path = os.path.join(base_dir, 'PEDE_Completo_Normalizado.csv')
-
-# Lendo arquivo do Github para criação de dataframe
 df = pd.read_csv(path, sep=';', engine='python', encoding='latin1')
 pd.options.display.float_format = '{:,.2f}'.format
 
-# Aplicar a função de limpeza a todas as colunas identificadas
 for col in numeric_cols_to_clean:
     if col in df.columns:
         df[col] = clean_numeric_column(df[col])
-
-# Exemplo de uso ou verificação inicial (opcional para o app.py, mas útil para demonstração)
-# st.write("Limpeza de dados para colunas numéricas concluída.")
-# st.dataframe(df[numeric_cols_to_clean].head())
-
-# --- Configuração da API do Gemini ---
-# A chave da API do Gemini deve ser configurada ANTES de chamar generate_gemini_insights
-# Em um ambiente Streamlit local ou em nuvem, você usaria st.secrets["GEMINI_API_KEY"]
-# Para este ambiente Colab, vamos simular isso para que a função possa ser testada
+        
+# Conexão Gemini API
 try:
     GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=GEMINI_API_KEY)
@@ -57,7 +44,6 @@ except Exception as e:
     GEMINI_API_KEY = None
     st.error(f"Erro ao configurar a API do Gemini: {e}")
 
-# Função genérica para gerar insights com Gemini
 def generate_gemini_insights(prompt):
     if GEMINI_API_KEY is None:
         return "Erro: A chave da API do Gemini não está configurada. Por favor, configure-a nos Secrets do Colab."
@@ -72,9 +58,6 @@ def generate_gemini_insights(prompt):
     except Exception as e:
         return f"Erro ao gerar insights com Gemini: {e}"
 
-
-# --- Otimização da Pergunta 4 (Ponto 2 do plano) ---
-# Função para gerar gráficos de regressão com linha de 45 graus
 def plot_reg_with_45_deg_line(data, x_col, y_col, title_pt, x_label_pt, y_label_pt):
     plt.figure(figsize=(8, 6))
     sns.regplot(x=x_col, y=y_col, data=data, scatter_kws={"s": 50, "alpha": 0.7},
@@ -82,7 +65,7 @@ def plot_reg_with_45_deg_line(data, x_col, y_col, title_pt, x_label_pt, y_label_
     plt.title(title_pt)
     plt.xlabel(x_label_pt)
     plt.ylabel(y_label_pt)
-    # Define os limites para a linha de 45 graus com base nos limites atuais dos eixos
+    
     lims = [
         np.min([plt.xlim(), plt.ylim()]),
         np.max([plt.xlim(), plt.ylim()]),
@@ -92,12 +75,10 @@ def plot_reg_with_45_deg_line(data, x_col, y_col, title_pt, x_label_pt, y_label_
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.tight_layout()
 
-# Modificação da função display_question_4 para incluir a Matriz de Perfil Psico-Pedagógico e insights do Gemini
 def display_question_4(df):
     st.header("Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)")
     st.markdown("***As percepções dos alunos sobre si mesmos (IAA) são coerentes com seu desempenho real (IDA) e engajamento (IEG)?***")
 
-    # Criando um sub-dataframe limpo para esta análise específica
     df_clean_q4 = df.dropna(subset=["IAA", "IDA", "IEG"]).copy()
 
     # Coeficientes de correlação (Pearson):
@@ -127,22 +108,22 @@ def display_question_4(df):
                               "Autoavaliação (IAA) vs Engajamento (IEG)",
                               "IEG (Engajamento)", "IAA (Autoavaliação)")
     st.pyplot(plt.gcf())
-    plt.close() # Fecha a figura
+    plt.close()
 
     # Gráfico 3: IAA vs IDA por Sexo
     plt.figure(figsize=(10, 7))
-    # sns.lmplot retorna um FacetGrid, que contém a figura. Precisamos acessar a figura.
+    
     g = sns.lmplot(x="IDA", y="IAA", hue="Sexo", data=df_clean_q4, height=6, aspect=1.2,
                markers=["o", "s"], scatter_kws={"s": 60, "alpha": 0.7})
-    g.fig.suptitle("Autoavaliação (IAA) vs Desempenho Real (IDA) por Sexo", y=1.02) # Ajusta o título para FacetGrid
+    g.fig.suptitle("Autoavaliação (IAA) vs Desempenho Real (IDA) por Sexo", y=1.02)
     g.set_axis_labels("IDA (Desempenho Real)", "IAA (Autoavaliação)")
     g.add_legend(title="Sexo")
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.tight_layout()
     st.pyplot(g.fig)
-    plt.close(g.fig) # Fecha a figura do FacetGrid
+    plt.close(g.fig)
 
-    # --- Nova Análise: Matriz de Perfil Psico-Pedagógico (IDA e IAA) ---
+    # --- Matriz de Perfil Psico-Pedagógico (IDA e IAA) ---
     st.subheader("Matriz de Perfil Psico-Pedagógico (IDA vs IAA)")
     st.markdown("Esta análise categoriza os alunos em quadrantes baseados no seu desempenho real (IDA) e autoavaliação (IAA) em relação às medianas do grupo.")
 
@@ -174,7 +155,6 @@ def display_question_4(df):
     st.write("**Distribuição de Alunos por Quadrante:**")
     st.dataframe(quadrant_analysis_df)
 
-    # Gráfico de barras para a distribuição dos quadrantes
     fig_quadrant, ax_quadrant = plt.subplots(figsize=(10, 6))
     sns.barplot(x=quadrant_analysis_df.index, y=quadrant_analysis_df['Percentual (%)'], hue=quadrant_analysis_df.index, palette='viridis', ax=ax_quadrant, legend=False)
     ax_quadrant.set_title('Percentual de Alunos por Perfil Psico-Pedagógico')
@@ -187,7 +167,6 @@ def display_question_4(df):
     plt.close(fig_quadrant)
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini sobre a Matriz de Perfil Psico-Pedagógico")
     
     prompt_gemini = f"""
     Apresente uma análise do perfil psicopedagógico de alunos, divididos em quatro quadrantes com base em seu desempenho real (IDA) e autoavaliação (IAA).
@@ -216,7 +195,6 @@ def display_question_4(df):
     else:
         st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
-# Modified analyze_and_plot_queda_streamlit to return stats
 def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_cols=['Idade', 'Sexo', 'IEG', 'IDA']):
     queda_col = f'queda_{year_pair_str}'
     delta_inde_col = f'delta_INDE_{year_pair_str}'
@@ -225,13 +203,11 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
 
     results_for_prompt = {}
 
-    # Média de IPS para grupos com e sem queda
     st.markdown(f"**IPS médio (queda {year_pair_str} vs. sem queda):**")
     ips_mean_stats = data.groupby(queda_col)[ips_col].agg(['count', 'mean', 'std'])
     st.dataframe(ips_mean_stats)
     results_for_prompt['ips_mean_stats'] = ips_mean_stats.to_string()
 
-    # T-test
     grp1 = data.loc[data[queda_col] == True, ips_col].dropna()
     grp0 = data.loc[data[queda_col] == False, ips_col].dropna()
     if len(grp1) > 1 and len(grp0) > 1:
@@ -260,7 +236,7 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
                 'Z-valor': logit.tvalues,
                 'P>|z|': logit.pvalues
             })
-            st.dataframe(summary_df.applymap(lambda x: f'{x:.3f}')) # Format to 3 decimal places
+            st.dataframe(summary_df.applymap(lambda x: f'{x:.3f}'))
             
             results_for_prompt['logit_summary'] = summary_df.applymap(lambda x: f'{x:.3f}').to_string()
         except Exception as e:
@@ -270,7 +246,6 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
         st.write(f"Não há dados suficientes para a Regressão Logística para {year_pair_str}.")
         results_for_prompt['logit_summary'] = f"Não há dados suficientes para a Regressão Logística para {year_pair_str}."
 
-    # Plotagem - Scatter Plot
     fig1, ax1 = plt.subplots(figsize=(10, 6))
     sns.scatterplot(data=data, x=ips_col, y=delta_inde_col, hue=queda_col, palette='Set1', alpha=0.7, ax=ax1)
     sns.regplot(data=data, x=ips_col, y=delta_inde_col, scatter=False, color='gray', lowess=True, line_kws={'linestyle': '--'}, ax=ax1)
@@ -283,7 +258,6 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
     st.pyplot(fig1)
     plt.close(fig1)
 
-    # Plotagem - Box Plot
     fig2, ax2 = plt.subplots(figsize=(8, 6))
     sns.boxplot(data=data, x=queda_col, y=ips_col, hue=queda_col, palette='pastel', legend=False, ax=ax2)
     ax2.set_title(f'Distribuição de IPS por Ocorrência de Queda ({year_pair_str})')
@@ -300,28 +274,23 @@ def display_question_5(df):
     st.header("Pergunta 5: Aspectos Psicossociais (IPS) e Quedas de Desempenho")
     st.markdown("***Há padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento?***")
 
-    # Calcular deltas para INDE
     df['delta_INDE_22_23'] = df['INDE 2023'] - df['INDE 2022']
     df['delta_INDE_23_24'] = df['INDE 2024'] - df['INDE 2023']
 
-    threshold = -0.3  # Um delta negativo indica redução, usamos -0.3 como um limiar para 'queda'
+    threshold = -0.3 
     df['queda_22_23'] = df['delta_INDE_22_23'] <= threshold
     df['queda_23_24'] = df['delta_INDE_23_24'] <= threshold
 
-    # Correlação entre IPS e as variações de INDE
     corr_ips_delta = df[['IPS', 'delta_INDE_22_23', 'delta_INDE_23_24']].corr()
     st.subheader("Correlação (IPS vs variações no INDE):")
-    st.dataframe(corr_ips_delta['IPS']) # Changed to st.dataframe for better display
+    st.dataframe(corr_ips_delta['IPS'])
 
-    # Store correlation results for prompt
     corr_ips_delta_str = corr_ips_delta['IPS'].to_string()
 
-    # Chamar a função para os dois períodos de queda e capturar os resultados
     results_22_23 = analyze_and_plot_queda_streamlit(df, '22_23')
     results_23_24 = analyze_and_plot_queda_streamlit(df, '23_24')
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini sobre Aspectos Psicossociais e Quedas de Desempenho")
 
     prompt_gemini = f"""
 Analise os padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento, com base nos seguintes resultados:
@@ -374,14 +343,13 @@ def display_question_6(df):
 
     df_clean_q6 = df.dropna(subset=["IPP", "IAN"]).copy()
 
-    # Correlação de Pearson entre IPP e IAN
+    # Correlação de Pearson
     correlation_ipp_ian, p_value_ipp_ian = pearsonr(df_clean_q6['IPP'], df_clean_q6['IAN'])
 
     st.subheader("Análise de Correlação")
     st.write(f"- **Correlação de Pearson entre IPP e IAN**: {correlation_ipp_ian:.3f}")
     st.write(f"- **Valor-P**: {p_value_ipp_ian:.3f}")
 
-    # Mediana do IAN para categorização
     median_ian = df_clean_q6['IAN'].median()
     st.write(f"- **Mediana do IAN**: {median_ian:.2f}")
 
@@ -389,7 +357,6 @@ def display_question_6(df):
     st.subheader("Categorização do IAN")
     st.dataframe(df_clean_q6[['IAN', 'IAN_category']].head())
 
-    # Teste T de amostras independentes para comparar o IPP entre as categorias de IAN
     ipp_low_ian = df_clean_q6.loc[df_clean_q6['IAN_category'] == 'Baixo IAN', 'IPP']
     ipp_high_ian = df_clean_q6.loc[df_clean_q6['IAN_category'] == 'Alto IAN', 'IPP']
 
@@ -401,7 +368,6 @@ def display_question_6(df):
         st.write(f"- **Estatística T**: {t_statistic:.3f}")
         st.write(f"- **Valor-P**: {p_value_ttest:.3f}")
 
-        # Média de IPP para ambos os grupos
         mean_ipp_low_ian = ipp_low_ian.mean()
         mean_ipp_high_ian = ipp_high_ian.mean()
 
@@ -433,7 +399,6 @@ def display_question_6(df):
     plt.close(fig2)
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini sobre IPP e IAN")
 
     prompt_gemini = f"""
     Analise se as avaliações psicopedagógicas (IPP) confirmam ou contradizem a defasagem identificada pelo IAN (Índice de Atraso de Desenvolvimento), com base nos seguintes resultados:
@@ -489,7 +454,6 @@ def display_question_8(df):
     regression_model = smf.ols(model_formula, data=df_regression_q8).fit()
     st.subheader("Sumário do Modelo de Regressão OLS:")
     
-    # Exibir coeficientes e p-valores em um DataFrame formatado
     results_df = pd.DataFrame({
         'Variável': regression_model.params.index,
         'Coeficiente': regression_model.params.values,
@@ -504,7 +468,6 @@ def display_question_8(df):
 
     ols_summary_text = regression_model.summary().as_text() # Capturar para o prompt, se necessário
 
-    # Identificação de alunos com baixo e alto INDE
     q1_inde_2023 = df_regression_q8['INDE 2023'].quantile(0.25)
     q3_inde_2023 = df_regression_q8['INDE 2023'].quantile(0.75)
 
@@ -520,7 +483,6 @@ def display_question_8(df):
     st.write("5 primeiras linhas de alunos com 'Alto INDE':")
     st.dataframe(high_inde_students[['INDE 2023']].head())
 
-    # Normalização e cálculo de pontuações médias
     indicator_cols = ['IDA', 'IEG', 'IPS', 'IPP']
 
     scaler = MinMaxScaler()
@@ -542,7 +504,7 @@ def display_question_8(df):
 
     st.subheader("Médias Normalizadas dos Indicadores para grupos 'Baixo INDE' vs 'Alto INDE':")
     st.dataframe(comparison_df)
-    comparison_df_str = comparison_df.to_string() # Capture for prompt
+    comparison_df_str = comparison_df.to_string()
 
     # Gráfico de Radar
     indicators = comparison_df.index.tolist()
@@ -573,7 +535,6 @@ def display_question_8(df):
     plt.close(fig)
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini sobre a Multidimensionalidade dos Indicadores")
 
     prompt_gemini = f"""
     Analise a relação multidimensional entre indicadores de desempenho (IDA), engajamento (IEG), aspectos psicossociais (IPS) e psicopedagógicos (IPP) com a nota global do aluno (INDE), com base nos seguintes resultados:
@@ -608,14 +569,12 @@ def display_question_11(df, numeric_cols_to_clean):
     st.header("Pergunta 11: Insights Adicionais e Criatividade")
     st.markdown("***Utilize cruzamentos de dados não solicitados nas perguntas anteriores para gerar sugestões práticas que melhorem a operação da instituição.***")
 
-    # Consolidação do INDE
     df['INDE_Consolidado'] = df[numeric_cols_to_clean[-3:]].mean(axis=1, skipna=True)
 
     st.subheader("Análise do INDE Consolidado por Tipo de Escola")
     st.write("5 primeiras linhas com 'INDE 2022', 'INDE 2023', 'INDE 2024' e 'INDE_Consolidado':")
     st.dataframe(df[numeric_cols_to_clean[-3:] + ['INDE_Consolidado']].head())
 
-    # Limpeza e padronização da coluna 'IE' (Instituição de Ensino)
     df_clean_school = df.copy()
     df_clean_school['IE'] = df_clean_school['IE'].astype(str).str.strip().str.lower()
 
@@ -631,14 +590,13 @@ def display_question_11(df, numeric_cols_to_clean):
 
     st.write("Valores únicos na coluna 'IE_Limpo' e suas contagens após a limpeza:")
     st.dataframe(df_clean_school['IE_Limpo'].value_counts())
-    ie_counts_str = df_clean_school['IE_Limpo'].value_counts().to_string() # Capture for prompt
+    ie_counts_str = df_clean_school['IE_Limpo'].value_counts().to_string()
 
-    # Estatísticas do INDE consolidado por tipo de escola
     school_inde_stats = df_clean_school.groupby('IE_Limpo')['INDE_Consolidado'].agg(['mean', 'std', 'count'])
 
     st.subheader("Estatísticas Agregadas do INDE Consolidado por Tipo de Escola:")
     st.dataframe(school_inde_stats)
-    school_inde_stats_str = school_inde_stats.to_string() # Capture for prompt
+    school_inde_stats_str = school_inde_stats.to_string()
 
     # Gráfico de Barras: Média do INDE Consolidado por Tipo de Escola
     fig_bar, ax_bar = plt.subplots(figsize=(10, 6))
@@ -689,8 +647,6 @@ def display_question_11(df, numeric_cols_to_clean):
         keyword_counts_str = "Nenhuma palavra-chave definida foi encontrada."
     st.markdown("  <small><i>(Nota: A extração de palavras-chave literais pode ser limitada; uma análise de texto mais sofisticada pode ser necessária para insights mais profundos de sentenças.)</i></small>", unsafe_allow_html=True)
 
-
-    # Treemap: Média do INDE Consolidado por Tipo de Escola e Contagem de Alunos
     school_inde_treemap = school_inde_stats.reset_index()
     school_inde_treemap.columns = ['Tipo_Escola', 'Media_INDE', 'Desvio_Padrao_INDE', 'Contagem_Alunos']
 
@@ -708,7 +664,6 @@ def display_question_11(df, numeric_cols_to_clean):
     st.plotly_chart(fig_treemap)
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini para Sugestões Práticas")
 
     prompt_gemini = f"""
     Analise os seguintes dados para gerar sugestões práticas que melhorem a operação da instituição 'Passos Mágicos'.
@@ -777,6 +732,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
