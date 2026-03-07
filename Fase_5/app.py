@@ -1,3 +1,5 @@
+!pip install -q streamlit pandas numpy seaborn matplotlib scipy statsmodels scikit-learn plotly google-generativeai
+
 # Imports
 import streamlit as st
 import pandas as pd
@@ -13,7 +15,6 @@ import plotly.express as px
 
 # Gemini API imports and configuration
 import google.generativeai as genai
-from google.colab import userdata # Only for Colab environment setup
 
 # Definindo as colunas numéricas que precisam de tratamento globalmente
 numeric_cols_to_clean = [
@@ -43,8 +44,7 @@ for col in numeric_cols_to_clean:
 # Em um ambiente Streamlit local ou em nuvem, você usaria st.secrets["GEMINI_API_KEY"]
 # Para este ambiente Colab, vamos simular isso para que a função possa ser testada
 try:
-    GEMINI_API_KEY = userdata.get('GEMINI_API_KEY') # Tenta obter do Colab Secrets
-    genai.configure(api_key=GEMINI_API_KEY)
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 except userdata.SecretNotFoundError:
     GEMINI_API_KEY = None # Se não encontrar, define como None
     st.warning("ATENÇÃO: A chave 'GEMINI_API_KEY' não foi encontrada nos Secrets do Colab.")
@@ -752,5 +752,4 @@ def main():
         display_question_11(df, numeric_cols_to_clean)
 
 if __name__ == '__main__':
-
     main()
