@@ -176,7 +176,7 @@ def display_question_4(df):
 
     # Gráfico de barras para a distribuição dos quadrantes
     fig_quadrant, ax_quadrant = plt.subplots(figsize=(10, 6))
-    sns.barplot(x=quadrant_analysis_df.index, y=quadrant_analysis_df['Percentual (%)'], palette='viridis', ax=ax_quadrant)
+    sns.barplot(x=quadrant_analysis_df.index, y=quadrant_analysis_df['Percentual (%)'], hue=quadrant_analysis_df.index, palette='viridis', ax=ax_quadrant, legend=False)
     ax_quadrant.set_title('Percentual de Alunos por Perfil Psico-Pedagógico')
     ax_quadrant.set_xlabel('Perfil')
     ax_quadrant.set_ylabel('Percentual de Alunos (%)')
@@ -769,6 +769,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
