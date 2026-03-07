@@ -1307,6 +1307,16 @@ def main():
         st.dataframe(df[numeric_cols_to_clean].head())
 
         st.markdown("#### Perguntas Chave e Principais Insights")
+
+        st.markdown("**Pergunta 1: Perfil de Defasagem (INDE 2024)**")
+        st.write("Apresenta a distribuição do Índice de Desenvolvimento do Aluno (INDE) para o ano de 2024, juntamente com a média e o desvio padrão. Isso fornece uma visão geral do desempenho atual dos alunos.")
+
+        st.markdown("**Pergunta 2: Evolução Média do INDE e Volatilidade de Aprendizagem (IVA)**")
+        st.write("Analisa a evolução do INDE médio dos alunos ao longo dos anos (2022-2024) e calcula o Índice de Volatilidade de Aprendizagem (IVA) por Fase, identificando as fases com maior oscilação no desempenho. Insights do Gemini sugerem intervenções para estabilizar o desempenho.")
+
+        st.markdown("**Pergunta 3: Limiar de Eficiência do Engajamento**")
+        st.write("Examina a relação entre o Índice de Engajamento (IEG) e a probabilidade de um aluno atingir o 'Ponto de Virada' (IPV). Um limiar de IEG é sugerido para identificar alunos em risco, com alertas proativos para intervenções que visam aumentar o engajamento e o potencial de virada. Insights do Gemini oferecem estratégias de intervenção.")
+
         st.markdown("**Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)**")
         st.write("Analisamos a coerência entre a percepção dos alunos sobre si mesmos e seu desempenho/engajamento. Correlações de Pearson e visualizações com linhas de 45 graus ajudam a identificar alunos superestimados, subestimados ou conscientes. Uma 'Matriz de Perfil Psico-Pedagógico' foi criada para categorizar alunos, com insights do Gemini para ações específicas.")
 
@@ -1316,8 +1326,17 @@ def main():
         st.markdown("**Pergunta 6: Aspectos Psicopedagógicos (IPP) e Defasagem (IAN)**")
         st.write("Comparamos avaliações psicopedagógicas (IPP) com o Índice de Atraso de Desenvolvimento (IAN) para entender se confirmam ou contradizem a defasagem. Coeficientes de Pearson e testes T foram utilizados, com visualizações de dispersão e box plots. O Gemini fornece insights sobre as implicações práticas dessa relação.")
 
+        st.markdown("**Pergunta 7: Simulador de Virada**")
+        st.write("Utiliza um modelo de Machine Learning (RandomForestClassifier) para prever a probabilidade de um aluno atingir o 'Ponto de Virada'. Inclui sliders interativos para simular o impacto de mudanças em indicadores como IDA, IEG, IPS, IAA e IPP na probabilidade. Insights do Gemini geram um 'Plano de Metas Individualizado' com sugestões práticas.")
+
         st.markdown("**Pergunta 8: Multidimensionalidade dos Indicadores**")
         st.write("Determinamos quais combinações de indicadores (IDA, IEG, IPS, IPP) mais influenciam a nota global (INDE). Um modelo de Regressão Linear (OLS) foi aplicado, e os alunos foram segmentados em grupos de 'Baixo INDE' e 'Alto INDE' para comparação de perfis através de gráficos de radar. Insights do Gemini sugerem as melhores alavancas para elevar o INDE.")
+
+        st.markdown("**Pergunta 9: Modelo de Risco (Defasagem)**")
+        st.write("Apresenta um modelo de Machine Learning (RandomForestClassifier) para prever o risco de defasagem dos alunos, com métricas como AUC e curva ROC. A integração com SHAP permite a explicabilidade do modelo, mostrando os fatores que mais contribuem para o risco de cada aluno. Uma 'Fila de Prioridade' é gerada, e o Gemini oferece recomendações personalizadas para intervenção.")
+
+        st.markdown("**Pergunta 10: Índice de Valor Adicionado (IVA)**")
+        st.write("Calcula o Índice de Valor Adicionado (IVA) para os alunos, medindo o progresso de desempenho em relação à média esperada para sua fase. Visualiza a evolução do INDE por fase e apresenta um 'Selo de Impacto' com o IVA geral da instituição, gerando insights do Gemini para atrair investidores e comprovar a eficácia do método.")
 
         st.markdown("**Pergunta 11: Insights Adicionais e Criatividade**")
         st.write("Geramos sugestões práticas adicionais através de cruzamentos de dados. Isso incluiu a consolidação do INDE, análise de desempenho por tipo de instituição de ensino (pública vs. privada) e uma análise de palavras-chave nos destaques dos alunos para identificar desafios comuns. O Gemini compilou recomendações estratégicas baseadas nesses insights.")
@@ -1350,6 +1369,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
