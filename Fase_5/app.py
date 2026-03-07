@@ -10,6 +10,7 @@ import statsmodels.formula.api as smf
 from sklearn.preprocessing import MinMaxScaler
 from collections import defaultdict
 import plotly.express as px
+import os
 
 # Gemini API imports and configuration
 import google.generativeai as genai
@@ -754,6 +755,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
