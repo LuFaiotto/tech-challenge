@@ -313,7 +313,7 @@ def display_question_5(df):
     results_23_24 = analyze_and_plot_queda_streamlit(df, '23_24')
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini sobre Aspectos Psicossociais e Quedas de Desempenho")
+    # st.subheader("Insights do Gemini sobre Aspectos Psicossociais e Quedas de Desempenho")
 
     prompt_gemini = f"""
 Analise os padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento, com base nos seguintes resultados:
@@ -425,7 +425,7 @@ def display_question_6(df):
     plt.close(fig2)
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini sobre IPP e IAN")
+    # st.subheader("Insights do Gemini sobre IPP e IAN")
 
     prompt_gemini = f"""
     Analise se as avaliações psicopedagógicas (IPP) confirmam ou contradizem a defasagem identificada pelo IAN (Índice de Atraso de Desenvolvimento), com base nos seguintes resultados:
@@ -565,7 +565,7 @@ def display_question_8(df):
     plt.close(fig)
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini sobre a Multidimensionalidade dos Indicadores")
+    # st.subheader("Insights do Gemini sobre a Multidimensionalidade dos Indicadores")
 
     prompt_gemini = f"""
     Analise a relação multidimensional entre indicadores de desempenho (IDA), engajamento (IEG), aspectos psicossociais (IPS) e psicopedagógicos (IPP) com a nota global do aluno (INDE), com base nos seguintes resultados:
@@ -700,7 +700,7 @@ def display_question_11(df, numeric_cols_to_clean):
     st.plotly_chart(fig_treemap)
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini para Sugestões Práticas")
+    # st.subheader("Insights do Gemini para Sugestões Práticas")
 
     prompt_gemini = f"""
     Analise os seguintes dados para gerar sugestões práticas que melhorem a operação da instituição 'Passos Mágicos'.
@@ -769,6 +769,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
