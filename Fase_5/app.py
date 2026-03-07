@@ -155,7 +155,7 @@ def display_question_2(df):
         fase_maior_oscilacao = None
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini sobre a Evolução do INDE e Volatilidade")
+    # st.subheader("Insights do Gemini sobre a Evolução do INDE e Volatilidade")
 
     prompt_gemini = f"""
     Analise a evolução média do Índice de Desenvolvimento do Aluno (INDE) ao longo de 2022, 2023 e 2024, e o Índice de Volatilidade de Aprendizagem (IVA) por Fase, com base nos seguintes dados:
@@ -182,13 +182,12 @@ def display_question_2(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    if st.button("Gerar Insights do Gemini (Pergunta 2)"):
-        gemini_insights = generate_gemini_insights(prompt_gemini)
+    gemini_insights = generate_gemini_insights(prompt_gemini)
 
-        if gemini_insights:
-            st.markdown(gemini_insights)
-        else:
-            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if gemini_insights:
+        st.markdown(gemini_insights)
+    else:
+        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_3(df):
     st.header("Pergunta 3: Limiar de Eficiência do Engajamento")
@@ -286,13 +285,12 @@ def display_question_3(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    if st.button("Gerar Insights do Gemini (Pergunta 3)"):
-        gemini_insights = generate_gemini_insights(prompt_gemini)
+    gemini_insights = generate_gemini_insights(prompt_gemini)
 
-        if gemini_insights:
-            st.markdown(gemini_insights)
-        else:
-            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if gemini_insights:
+        st.markdown(gemini_insights)
+    else:
+        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_4(df):
     st.header("Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)")
@@ -728,7 +726,7 @@ def display_question_7(df):
     st.metric("Probabilidade de Atingir o Ponto de Virada", f"{simulated_prob:.2%}")
 
     # --- Geração de Insights com a API do Gemini para Plano de Metas Individualizado ---
-    st.subheader("Plano de Metas Individualizado (via Gemini)")
+    st.subheader("Plano de Metas Individualizado")
 
     if st.button("Gerar Plano de Metas para Simulação"):
         prompt_gemini = f"""
@@ -979,33 +977,32 @@ def display_question_9(df):
         st.info("A fila de prioridade está vazia para seleção.")
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
+    # st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
 
-    if st.button("Gerar Insights do Gemini (Pergunta 9)"):
-        prompt_gemini = f"""
-        Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
-        
-        **Desempenho do Modelo:**
-        - AUC do Modelo de Risco: {auc_risco:.3f}
+    prompt_gemini = f"""
+    Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
+    
+    **Desempenho do Modelo:**
+    - AUC do Modelo de Risco: {auc_risco:.3f}
 
-        **Fila de Prioridade (Top 10 Alunos):**
-        ```
-        {fila_prioridade[['RA', 'Prob_Risco', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP']].to_string()}
-        ```
+    **Fila de Prioridade (Top 10 Alunos):**
+    ```
+    {fila_prioridade[['RA', 'Prob_Risco', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP']].to_string()}
+    ```
 
-        Com base nesses dados e no conceito de fatores contribuintes do SHAP, forneça:
-        1. Uma interpretação do desempenho do modelo (AUC).
-        2. Análise dos padrões dos alunos na fila de prioridade e os principais indicadores que os colocam em risco.
-        3. Sugestões de ações práticas e personalizadas para a 'Passos Mágicos' intervir com esses alunos de alto risco, focando nos indicadores que mais contribuem para o risco de defasagem (como indicado pelos SHAP values).
-        4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
-        """
+    Com base nesses dados e no conceito de fatores contribuintes do SHAP, forneça:
+    1. Uma interpretação do desempenho do modelo (AUC).
+    2. Análise dos padrões dos alunos na fila de prioridade e os principais indicadores que os colocam em risco.
+    3. Sugestões de ações práticas e personalizadas para a 'Passos Mágicos' intervir com esses alunos de alto risco, focando nos indicadores que mais contribuem para o risco de defasagem (como indicado pelos SHAP values).
+    4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
+    """
 
-        gemini_insights = generate_gemini_insights(prompt_gemini)
+    gemini_insights = generate_gemini_insights(prompt_gemini)
 
-        if gemini_insights:
-            st.markdown(gemini_insights)
-        else:
-            st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
+    if gemini_insights:
+        st.markdown(gemini_insights)
+    else:
+        st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
 
 def display_question_10(df):
     st.header("Pergunta 10: Índice de Valor Adicionado (IVA)")
@@ -1100,36 +1097,35 @@ def display_question_10(df):
     # --- Geração de Insights com a API do Gemini para Investidores ---
     st.subheader("Insights do Gemini para Investidores")
 
-    if st.button("Gerar Insights do Gemini (Pergunta 10)"):
-        prompt_gemini = f"""
-        Prepare um resumo executivo para potenciais investidores, destacando o "Valor Adicionado" que a "Passos Mágicos" gera no desempenho dos alunos. Utilize os seguintes dados:
+    prompt_gemini = f"""
+    Prepare um resumo executivo para potenciais investidores, destacando o "Valor Adicionado" que a "Passos Mágicos" gera no desempenho dos alunos. Utilize os seguintes dados:
 
-        **1. Média Geral do Índice de Valor Adicionado (IVA):** {media_iva_geral:.2f}
+    **1. Média Geral do Índice de Valor Adicionado (IVA):** {media_iva_geral:.2f}
 
-        **2. Evolução do INDE ao Longo do Tempo por Fase (tendências gerais):
-           - Média INDE 2022: {media_fase_ano[media_fase_ano['Ano'] == 2022]['INDE'].mean():.2f}
-           - Média INDE 2023: {media_fase_ano[media_fase_ano['Ano'] == 2023]['INDE'].mean():.2f}
-           - Média INDE 2024: {media_fase_ano[media_fase_ano['Ano'] == 2024]['INDE'].mean():.2f}
+    **2. Evolução do INDE ao Longo do Tempo por Fase (tendências gerais):
+       - Média INDE 2022: {media_fase_ano[media_fase_ano['Ano'] == 2022]['INDE'].mean():.2f}
+       - Média INDE 2023: {media_fase_ano[media_fase_ano['Ano'] == 2023]['INDE'].mean():.2f}
+       - Média INDE 2024: {media_fase_ano[media_fase_ano['Ano'] == 2024]['INDE'].mean():.2f}
 
-        **3. Impacto do IVA:**
-           - Top 10 Alunos com Maior IVA:
-            ```
-            {df_q10.sort_values(by='IVA', ascending=False).head(10)[['RA', 'Fase', 'IVA']].to_string()}
-            ```
+    **3. Impacto do IVA:**
+       - Top 10 Alunos com Maior IVA:
+        ```
+        {df_q10.sort_values(by='IVA', ascending=False).head(10)[['RA', 'Fase', 'IVA']].to_string()}
+        ```
 
-        Com base nesses dados, apresente:
-        1. Uma narrativa convincente sobre o impacto educacional da Passos Mágicos, focando no IVA como prova de eficácia.
-        2. Pontos chave sobre a evolução do INDE que demonstrem sucesso e consistência.
-        3. Argumentos que justifiquem o investimento na Passos Mágicos, baseados no valor agregado que a instituição proporciona aos alunos.
-        4. Formule a resposta de forma clara, concisa e orientada para investidores, utilizando linguagem persuasiva e dados para corroborar as afirmações.
-        """
+    Com base nesses dados, apresente:
+    1. Uma narrativa convincente sobre o impacto educacional da Passos Mágicos, focando no IVA como prova de eficácia.
+    2. Pontos chave sobre a evolução do INDE que demonstrem sucesso e consistência.
+    3. Argumentos que justifiquem o investimento na Passos Mágicos, baseados no valor agregado que a instituição proporciona aos alunos.
+    4. Formule a resposta de forma clara, concisa e orientada para investidores, utilizando linguagem persuasiva e dados para corroborar as afirmações.
+    """
 
-        gemini_insights = generate_gemini_insights(prompt_gemini)
+    gemini_insights = generate_gemini_insights(prompt_gemini)
 
-        if gemini_insights:
-            st.markdown(gemini_insights)
-        else:
-            st.warning("Não foi possível gerar insights para investidores com o Gemini. Verifique a configuração da API.")
+    if gemini_insights:
+        st.markdown(gemini_insights)
+    else:
+        st.warning("Não foi possível gerar insights para investidores com o Gemini. Verifique a configuração da API.")
 
 def display_question_11(df, numeric_cols_to_clean):
     st.header("Pergunta 11: Insights Adicionais e Criatividade")
@@ -1339,6 +1335,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
