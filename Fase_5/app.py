@@ -11,6 +11,10 @@ from sklearn.preprocessing import MinMaxScaler
 from collections import defaultdict
 import plotly.express as px
 import os
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score, roc_curve
+import shap
 
 import google.generativeai as genai
 
@@ -1335,6 +1339,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
