@@ -1020,12 +1020,12 @@ def display_question_9(df):
 
 def display_question_10(df):
     st.header("Pergunta 10: Índice de Valor Adicionado (IVA)")
-    st.markdown("***Analisar o Valor Adicionado gerado pela Passos Mágicos no desempenho dos alunos, segmentado por fase, e gerar insights para investidores.***")
+    st.markdown("***Analisar o \"Valor Adicionado\" gerado pela \"Passos Mágicos\" no desempenho dos alunos, segmentado por fase, e gerar insights para investidores.***")
 
     # Preparar dados para análise da evolução do INDE por Fase
     inde_long = df.melt(
         id_vars=["RA", "Fase"],
-        value_vars=["INDE 2022", "INDE 2023", "INDE 2024"],
+        value_vars=["INDE 2022", "INDE 2023"],
         var_name="Ano",
         value_name="INDE"
     )
@@ -1078,7 +1078,7 @@ def display_question_10(df):
     # Para simplificar, vamos considerar a diferença INDE 2024 - INDE 2022 como a evolução do aluno
     # E a média dessa diferença por fase como a evolução média da fase.
     df_q10 = df.copy()
-    df_q10['Evolucao_Aluno'] = df_q10['INDE 2024'] - df_q10['INDE 2022']
+    df_q10['Evolucao_Aluno'] = df_q10['INDE 2023'] - df_q10['INDE 2022']
 
     # Calcular a média de evolução por fase
     media_evolucao_fase = df_q10.groupby('Fase')['Evolucao_Aluno'].mean().reset_index()
@@ -1119,7 +1119,6 @@ def display_question_10(df):
     **2. Evolução do INDE ao Longo do Tempo por Fase (tendências gerais):
        - Média INDE 2022: {media_fase_ano[media_fase_ano['Ano'] == 2022]['INDE'].mean():.2f}
        - Média INDE 2023: {media_fase_ano[media_fase_ano['Ano'] == 2023]['INDE'].mean():.2f}
-       - Média INDE 2024: {media_fase_ano[media_fase_ano['Ano'] == 2024]['INDE'].mean():.2f}
 
     **3. Impacto do IVA:**
        - Top 10 Alunos com Maior IVA:
@@ -1368,6 +1367,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
