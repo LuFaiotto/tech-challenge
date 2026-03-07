@@ -25,7 +25,7 @@ def clean_numeric_column(series):
     return pd.to_numeric(series.astype(str).str.replace(',', '.'), errors='coerce')
 
 # Lendo arquivo do Github para criação de dataframe
-df = pd.read_csv('/PEDE_Completo_Normalizado.csv', sep=';', engine='python', encoding='latin1')
+df = pd.read_csv('https://github.com/LuFaiotto/tech-challenge/blob/main/Fase_5/PEDE_Completo_Normalizado.csv', sep=';', engine='python', encoding='latin1')
 pd.options.display.float_format = '{:,.2f}'.format
 
 # Aplicar a função de limpeza a todas as colunas identificadas
@@ -751,4 +751,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
