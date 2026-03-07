@@ -316,40 +316,40 @@ def display_question_5(df):
     st.subheader("Insights do Gemini sobre Aspectos Psicossociais e Quedas de Desempenho")
 
     prompt_gemini = f"""
-    Analise os padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento, com base nos seguintes resultados:
+Analise os padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento, com base nos seguintes resultados:
 
-    **1. Correlação entre IPS e Variações no INDE:**
-    ```
-    {corr_ips_delta_str}
-    ```
+**1. Correlação entre IPS e Variações no INDE:**
+```
+{corr_ips_delta_str}
+```
 
-    **2. Análise para a Queda 22_23:**
-    - **IPS médio (queda 22_23 vs. sem queda):**
-    ```
-    {results_22_23.get('ips_mean_stats', 'N/A')}
-    ```
-    - **Teste T de IPS (queda vs. sem queda):** {results_22_23.get('ttest_results', 'N/A')}
-    - **Regressão Logística (queda_22_23 ~ IPS + covariáveis):**
-    ```
-    {results_22_23.get('logit_summary', 'N/A')}
-    ```
+**2. Análise para a Queda 22_23:**
+- **IPS médio (queda 22_23 vs. sem queda):**
+```
+{results_22_23.get('ips_mean_stats', 'N/A')}
+```
+- **Teste T de IPS (queda vs. sem queda):** {results_22_23.get('ttest_results', 'N/A')}
+- **Regressão Logística (queda_22_23 ~ IPS + covariáveis):**
+```
+{results_22_23.get('logit_summary', 'N/A')}
+```
 
-    **3. Análise para a Queda 23_24:**
-    - **IPS médio (queda 23_24 vs. sem queda):**
-    ```
-    {results_23_24.get('ips_mean_stats', 'N/A')}
-    ```
-    - **Teste T de IPS (queda vs. sem queda):** {results_23_24.get('ttest_results', 'N/A')}
-    - **Regressão Logística (queda_23_24 ~ IPS + covariáveis):**
-    ```
-    {results_23_24.get('logit_summary', 'N/A')}
-    ```
+**3. Análise para a Queda 23_24:**
+- **IPS médio (queda 23_24 vs. sem queda):**
+```
+{results_23_24.get('ips_mean_stats', 'N/A')}
+```
+- **Teste T de IPS (queda vs. sem queda):** {results_23_24.get('ttest_results', 'N/A')}
+- **Regressão Logística (queda_23_24 ~ IPS + covariáveis):**
+```
+{results_23_24.get('logit_summary', 'N/A')}
+```
 
-    Com base nesses dados, por favor, forneça:
-    1. Uma análise concisa de como os aspectos psicossociais (IPS) se relacionam com as quedas no Índice de Desenvolvimento do Aluno (INDE) em diferentes períodos.
-    2. Identifique quais indicadores psicossociais (se houver, a partir da regressão logística) são mais preditivos de uma queda de desempenho.
-    3. Sugira ações estratégicas e intervenções práticas que a instituição 'Passos Mágicos' pode implementar para mitigar quedas de desempenho, considerando os insights dos dados.
-    4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
+Com base nesses dados, por favor, forneça:
+1. Uma análise concisa de como os aspectos psicossociais (IPS) se relacionam com as quedas no Índice de Desenvolvimento do Aluno (INDE) em diferentes períodos.
+2. Identifique quais indicadores psicossociais (se houver, a partir da regressão logística) são mais preditivos de uma queda de desempenho.
+3. Sugira ações estratégicas e intervenções práticas que a instituição 'Passos Mágicos' pode implementar para mitigar quedas de desempenho, considerando os insights dos dados.
+4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
     gemini_insights = generate_gemini_insights(prompt_gemini)
@@ -756,6 +756,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
