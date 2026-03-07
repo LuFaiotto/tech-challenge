@@ -187,7 +187,7 @@ def display_question_4(df):
     plt.close(fig_quadrant)
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini sobre a Matriz de Perfil Psico-Pedagógico")
+    # st.subheader("Insights do Gemini sobre a Matriz de Perfil Psico-Pedagógico")
     
     prompt_gemini = f"""
     Apresente uma análise do perfil psicopedagógico de alunos, divididos em quatro quadrantes com base em seu desempenho real (IDA) e autoavaliação (IAA).
@@ -769,6 +769,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
