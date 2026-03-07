@@ -1,5 +1,3 @@
-!pip install -q streamlit pandas numpy seaborn matplotlib scipy statsmodels scikit-learn plotly google-generativeai
-
 # Imports
 import streamlit as st
 import pandas as pd
@@ -753,3 +751,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
