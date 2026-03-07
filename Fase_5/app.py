@@ -170,6 +170,7 @@ def display_question_1(df):
         st.metric("Média INDE", f"{df['INDE 2024'].mean():.2f}")
         st.metric("Desvio Padrão", f"{df['INDE 2024'].std():.2f}")
 
+    st.subheader("Observações")
     st.markdown("***Observa-se que a média do INDE é 7,4, com desvio padrão de 1,01, indicando que os dados estão relativamente concentrados próximos à média. Isso demonstra que o desempenho geral dos alunos é estável, sem variações extremas muito acentuadas. A concentração dos valores em torno da faixa 7–8 indica que a maioria dos alunos apresenta desempenho considerado bom, com pequena dispersão entre os resultados.***")
 
 def display_question_2(df):
@@ -1312,6 +1313,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
