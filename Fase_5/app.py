@@ -253,8 +253,16 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
         try:
             logit = sm.Logit(y, X).fit(disp=0)
             st.markdown(f"**Regressão Logística ({queda_col} ~ {ips_col} + covariáveis):**")
-            st.text(logit.summary().as_text())
-            results_for_prompt['logit_summary'] = logit.summary().as_text()
+            
+            summary_df = pd.DataFrame({
+                'Coeficiente': logit.params,
+                'Erro Padrão': logit.bse,
+                'Z-valor': logit.tvalues,
+                'P>|z|': logit.pvalues
+            })
+            st.dataframe(summary_df.applymap(lambda x: f'{x:.3f}')) # Format to 3 decimal places
+            
+            results_for_prompt['logit_summary'] = summary_df.applymap(lambda x: f'{x:.3f}').to_string()
         except Exception as e:
             st.write(f"Erro ao executar a Regressão Logística para {year_pair_str}: {e}")
             results_for_prompt['logit_summary'] = f"Erro ao executar a Regressão Logística: {e}"
@@ -769,6 +777,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
