@@ -79,6 +79,80 @@ def plot_reg_with_45_deg_line(data, x_col, y_col, title_pt, x_label_pt, y_label_
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.tight_layout()
 
+def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_cols=['Idade', 'Sexo', 'IEG', 'IDA']):
+    queda_col = f'queda_{year_pair_str}'
+    delta_inde_col = f'delta_INDE_{year_pair_str}'
+
+    st.subheader(f"Análise para a Queda {year_pair_str}:")
+
+    results_for_prompt = {}
+
+    st.markdown(f"**IPS médio (queda {year_pair_str} vs. sem queda):**")
+    ips_mean_stats = data.groupby(queda_col)[ips_col].agg(['count', 'mean', 'std'])
+    st.dataframe(ips_mean_stats)
+    results_for_prompt['ips_mean_stats'] = ips_mean_stats.to_string()
+
+    grp1 = data.loc[data[queda_col] == True, ips_col].dropna()
+    grp0 = data.loc[data[queda_col] == False, ips_col].dropna()
+    if len(grp1) > 1 and len(grp0) > 1:
+        tstat, pval = ttest_ind(grp1, grp0, equal_var=False)
+        st.write(f"**Teste T de IPS (queda vs. sem queda):** t = {tstat:.3f}, p = {pval:.4f}")
+        results_for_prompt['ttest_results'] = f"t = {tstat:.3f}, p = {pval:.4f}"
+    else:
+        st.write(f"Não há dados suficientes para realizar o Teste T para {year_pair_str}.")
+        results_for_prompt['ttest_results'] = f"Não há dados suficientes para realizar o Teste T para {year_pair_str}."
+
+    # Regressão logística
+    model_df = data[[queda_col, ips_col] + other_cols].copy()
+    model_df['Sexo_M'] = model_df['Sexo'].str.lower().str.contains('masc').astype(int)
+    model_df = model_df.dropna()
+    if not model_df.empty:
+        y = model_df[queda_col].astype(int)
+        X = model_df[[ips_col, 'Idade', 'Sexo_M', 'IEG', 'IDA']].astype(float)
+        X = sm.add_constant(X)
+        try:
+            logit = sm.Logit(y, X).fit(disp=0)
+            st.markdown(f"**Regressão Logística ({queda_col} ~ {ips_col} + covariáveis):**")
+            
+            summary_df = pd.DataFrame({
+                'Coeficiente': logit.params,
+                'Erro Padrão': logit.bse,
+                'Z-valor': logit.tvalues,
+                'P>|z|': logit.pvalues
+            })
+            st.dataframe(summary_df.applymap(lambda x: f'{x:.3f}'))
+            
+            results_for_prompt['logit_summary'] = summary_df.applymap(lambda x: f'{x:.3f}').to_string()
+        except Exception as e:
+            st.write(f"Erro ao executar a Regressão Logística para {year_pair_str}: {e}")
+            results_for_prompt['logit_summary'] = f"Erro ao executar a Regressão Logística: {e}"
+    else:
+        st.write(f"Não há dados suficientes para a Regressão Logística para {year_pair_str}.")
+        results_for_prompt['logit_summary'] = f"Não há dados suficientes para a Regressão Logística para {year_pair_str}."
+
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(data=data, x=ips_col, y=delta_inde_col, hue=queda_col, palette='Set1', alpha=0.7, ax=ax1)
+    sns.regplot(data=data, x=ips_col, y=delta_inde_col, scatter=False, color='gray', lowess=True, line_kws={'linestyle': '--'}, ax=ax1)
+    ax1.axhline(0, color='k', linestyle='--', linewidth=1)
+    ax1.set_title(f'IPS vs Variação do INDE ({year_pair_str})')
+    ax1.set_xlabel('IPS (Aspectos Psicossociais)')
+    ax1.set_ylabel(f'Variação INDE ({year_pair_str})')
+    ax1.grid(True, linestyle='--', alpha=0.6)
+    ax1.legend(title=f'Queda {year_pair_str}', loc='best')
+    st.pyplot(fig1)
+    plt.close(fig1)
+
+    fig2, ax2 = plt.subplots(figsize=(8, 6))
+    sns.boxplot(data=data, x=queda_col, y=ips_col, hue=queda_col, palette='pastel', legend=False, ax=ax2)
+    ax2.set_title(f'Distribuição de IPS por Ocorrência de Queda ({year_pair_str})')
+    ax2.set_xlabel(f'Queda {year_pair_str} (Verdadeiro/Falso)')
+    ax2.set_ylabel('IPS (Aspectos Psicossociais)')
+    ax2.grid(axis='y', linestyle='--', alpha=0.6)
+    st.pyplot(fig2)
+    plt.close(fig2)
+
+    return results_for_prompt
+
 def display_question_1(df):
     st.subheader("Distribuição do INDE 2024")
     col1, col2 = st.columns([2, 1])
@@ -411,81 +485,6 @@ def display_question_4(df):
         st.markdown(gemini_insights)
     else:
         st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
-
-def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_cols=['Idade', 'Sexo', 'IEG', 'IDA']):
-    queda_col = f'queda_{year_pair_str}'
-    delta_inde_col = f'delta_INDE_{year_pair_str}'
-
-    st.subheader(f"Análise para a Queda {year_pair_str}:")
-
-    results_for_prompt = {}
-
-    st.markdown(f"**IPS médio (queda {year_pair_str} vs. sem queda):**")
-    ips_mean_stats = data.groupby(queda_col)[ips_col].agg(['count', 'mean', 'std'])
-    st.dataframe(ips_mean_stats)
-    results_for_prompt['ips_mean_stats'] = ips_mean_stats.to_string()
-
-    grp1 = data.loc[data[queda_col] == True, ips_col].dropna()
-    grp0 = data.loc[data[queda_col] == False, ips_col].dropna()
-    if len(grp1) > 1 and len(grp0) > 1:
-        tstat, pval = ttest_ind(grp1, grp0, equal_var=False)
-        st.write(f"**Teste T de IPS (queda vs. sem queda):** t = {tstat:.3f}, p = {pval:.4f}")
-        results_for_prompt['ttest_results'] = f"t = {tstat:.3f}, p = {pval:.4f}"
-    else:
-        st.write(f"Não há dados suficientes para realizar o Teste T para {year_pair_str}.")
-        results_for_prompt['ttest_results'] = f"Não há dados suficientes para realizar o Teste T para {year_pair_str}."
-
-    # Regressão logística
-    model_df = data[[queda_col, ips_col] + other_cols].copy()
-    model_df['Sexo_M'] = model_df['Sexo'].str.lower().str.contains('masc').astype(int)
-    model_df = model_df.dropna()
-    if not model_df.empty:
-        y = model_df[queda_col].astype(int)
-        X = model_df[[ips_col, 'Idade', 'Sexo_M', 'IEG', 'IDA']].astype(float)
-        X = sm.add_constant(X)
-        try:
-            logit = sm.Logit(y, X).fit(disp=0)
-            st.markdown(f"**Regressão Logística ({queda_col} ~ {ips_col} + covariáveis):**")
-            
-            summary_df = pd.DataFrame({
-                'Coeficiente': logit.params,
-                'Erro Padrão': logit.bse,
-                'Z-valor': logit.tvalues,
-                'P>|z|': logit.pvalues
-            })
-            st.dataframe(summary_df.applymap(lambda x: f'{x:.3f}'))
-            
-            results_for_prompt['logit_summary'] = summary_df.applymap(lambda x: f'{x:.3f}').to_string()
-        except Exception as e:
-            st.write(f"Erro ao executar a Regressão Logística para {year_pair_str}: {e}")
-            results_for_prompt['logit_summary'] = f"Erro ao executar a Regressão Logística: {e}"
-    else:
-        st.write(f"Não há dados suficientes para a Regressão Logística para {year_pair_str}.")
-        results_for_prompt['logit_summary'] = f"Não há dados suficientes para a Regressão Logística para {year_pair_str}."
-
-    fig1, ax1 = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(data=data, x=ips_col, y=delta_inde_col, hue=queda_col, palette='Set1', alpha=0.7, ax=ax1)
-    sns.regplot(data=data, x=ips_col, y=delta_inde_col, scatter=False, color='gray', lowess=True, line_kws={'linestyle': '--'}, ax=ax1)
-    ax1.axhline(0, color='k', linestyle='--', linewidth=1)
-    ax1.set_title(f'IPS vs Variação do INDE ({year_pair_str})')
-    ax1.set_xlabel('IPS (Aspectos Psicossociais)')
-    ax1.set_ylabel(f'Variação INDE ({year_pair_str})')
-    ax1.grid(True, linestyle='--', alpha=0.6)
-    ax1.legend(title=f'Queda {year_pair_str}', loc='best')
-    st.pyplot(fig1)
-    plt.close(fig1)
-
-    fig2, ax2 = plt.subplots(figsize=(8, 6))
-    sns.boxplot(data=data, x=queda_col, y=ips_col, hue=queda_col, palette='pastel', legend=False, ax=ax2)
-    ax2.set_title(f'Distribuição de IPS por Ocorrência de Queda ({year_pair_str})')
-    ax2.set_xlabel(f'Queda {year_pair_str} (Verdadeiro/Falso)')
-    ax2.set_ylabel('IPS (Aspectos Psicossociais)')
-    ax2.grid(axis='y', linestyle='--', alpha=0.6)
-    st.pyplot(fig2)
-    plt.close(fig2)
-
-    return results_for_prompt
-
 
 def display_question_5(df):
     st.header("Pergunta 5: Aspectos Psicossociais (IPS) e Quedas de Desempenho")
@@ -1369,6 +1368,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
