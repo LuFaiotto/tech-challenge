@@ -181,7 +181,7 @@ def display_question_4(df):
     ax_quadrant.set_xlabel('Perfil')
     ax_quadrant.set_ylabel('Percentual de Alunos (%)')
     ax_quadrant.tick_params(axis='x', rotation=45)
-    ax_quadrant.grid(axis='y', linestyle='--', alpha=0.7)
+    ax_quadrant.grid(True, linestyle='--', alpha=0.7)
     plt.tight_layout()
     st.pyplot(fig_quadrant)
     plt.close(fig_quadrant)
@@ -480,8 +480,21 @@ def display_question_8(df):
     model_formula = 'Q("INDE 2023") ~ Q("IDA") + Q("IEG") + Q("IPS") + Q("IPP")'
     regression_model = smf.ols(model_formula, data=df_regression_q8).fit()
     st.subheader("Sumário do Modelo de Regressão OLS:")
-    st.text(regression_model.summary().as_text())
-    ols_summary_text = regression_model.summary().as_text() # Capture for prompt
+    
+    # Exibir coeficientes e p-valores em um DataFrame formatado
+    results_df = pd.DataFrame({
+        'Variável': regression_model.params.index,
+        'Coeficiente': regression_model.params.values,
+        'P-valor': regression_model.pvalues.values
+    })
+    results_df['Coeficiente'] = results_df['Coeficiente'].map('{:,.3f}'.format)
+    results_df['P-valor'] = results_df['P-valor'].map('{:,.3f}'.format)
+    st.dataframe(results_df)
+
+    st.write(f"- **R-quadrado**: {regression_model.rsquared:.3f}")
+    st.write(f"- **R-quadrado Ajustado**: {regression_model.rsquared_adj:.3f}")
+
+    ols_summary_text = regression_model.summary().as_text() # Capturar para o prompt, se necessário
 
     # Identificação de alunos com baixo e alto INDE
     q1_inde_2023 = df_regression_q8['INDE 2023'].quantile(0.25)
@@ -756,6 +769,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
