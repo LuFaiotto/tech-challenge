@@ -1,5 +1,3 @@
-!pip install -q streamlit pandas numpy seaborn matplotlib scipy statsmodels scikit-learn plotly google-generativeai
-
 # Imports
 import streamlit as st
 import pandas as pd
@@ -754,4 +752,5 @@ def main():
         display_question_11(df, numeric_cols_to_clean)
 
 if __name__ == '__main__':
+
     main()
