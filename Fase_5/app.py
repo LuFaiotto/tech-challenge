@@ -183,7 +183,6 @@ def display_question_2(df):
         value_name="INDE"
     )
 
-    # Remove 'INDE ' prefix and convert 'Ano' to numeric
     inde_melt["Ano"] = inde_melt["Ano"].str.replace("INDE ", "").astype(int)
 
     media_inde = inde_melt.groupby("Ano")["INDE"].mean().reset_index()
@@ -202,25 +201,18 @@ def display_question_2(df):
     st.subheader("Índice de Volatilidade de Aprendizagem (IVA) por Fase")
     st.markdown("O IVA é o desvio padrão do INDE de cada aluno ao longo dos anos, agrupado por Fase.")
 
-    # Calculate INDE per student per year, then std dev for each student (IVA)
-    # First, pivot the data to have years as columns for each student
     inde_pivot = inde_melt.pivot_table(index=['RA', 'Fase'], columns='Ano', values='INDE')
 
-    # Calculate standard deviation across years for each student
-    # Dropna(how='all') ensures only students with data for at least two years are considered for std deviation
     inde_pivot['IVA_Aluno'] = inde_pivot.std(axis=1)
 
-    # Filter out NaNs if a student only has one year of data, as std dev would be NaN
     iva_por_aluno = inde_pivot.reset_index()[['RA', 'Fase', 'IVA_Aluno']].dropna(subset=['IVA_Aluno'])
 
-    # Calculate mean IVA by Fase
     iva_por_fase = iva_por_aluno.groupby('Fase')['IVA_Aluno'].mean().reset_index()
     iva_por_fase = iva_por_fase.sort_values(by='IVA_Aluno', ascending=False)
 
     st.write("**IVA Médio por Fase:**")
     st.dataframe(iva_por_fase)
 
-    # Identify Fase with highest oscillation
     if not iva_por_fase.empty:
         fase_maior_oscilacao = iva_por_fase.iloc[0]
         st.write(f"**A Fase com a maior oscilação no Índice de Volatilidade de Aprendizagem (IVA) é a Fase {fase_maior_oscilacao['Fase']} com um IVA médio de {fase_maior_oscilacao['IVA_Aluno']:.2f}.**")
@@ -267,36 +259,18 @@ def display_question_3(df):
     st.header("Pergunta 3: Limiar de Eficiência do Engajamento")
     st.markdown("***Analisar a relação entre o engajamento (IEG) e a ocorrência do 'Ponto de Virada' (PV) para identificar um limiar de IEG.***")
 
-    # Certificar-se de que 'Ponto de Virada' (PV) e IEG estão limpos
     df_q3 = df.dropna(subset=["IEG", "IPV"]).copy()
 
-    # Criar faixas de IEG (decil, ou intervalos de 1 ponto, etc.)
-    # Usaremos bins para categorizar o IEG
-    # Definir bins de 0 a 10 com intervalos de 1
     bins = np.arange(0, 11, 1)
     labels = [f'{i}-{i+1}' for i in range(10)]
     df_q3['IEG_Faixa'] = pd.cut(df_q3['IEG'], bins=bins, labels=labels, right=False, include_lowest=True)
 
-    # Calcular a porcentagem de alunos que atingiram o Ponto de Virada (IPV > 0.5, assumindo 0.5 como limiar)
-    # O IPV é um índice, então vamos considerar que atingir o PV significa ter um IPV acima da mediana ou um valor de corte
-    # Assumindo que IPV > 0.5 significa que o Ponto de Virada foi atingido. Se 'IPV' é o índice de potencial de virada, podemos usar um limiar.
-    # Se o 'N_Atingiu PV' do notebook anterior indica atingir o Ponto de Virada, usaremos ele.
-    # Vamos verificar o df original se 'N_Atingiu PV' existe ou se IPV é o que estamos procurando
-
-    # Pelo notebook anterior, 'IPV' é 'Índice de Potencial de Virada'.
-    # A "Pergunta 7" anterior usou 'N_Atingiu PV', vamos assumir que essa coluna binária indica se o PV foi atingido.
-    # Se 'N_Atingiu PV' não existir, vamos criar uma condição baseada em 'IPV'.
-
     if 'N_Atingiu PV' in df_q3.columns:
-        df_q3['Atingiu_PV'] = df_q3['N_Atingiu PV'] # Usar a coluna existente
+        df_q3['Atingiu_PV'] = df_q3['N_Atingiu PV']
     else:
-        # Se não existe 'N_Atingiu PV', podemos definir um limiar para IPV para indicar 'Atingiu_PV'
-        # Por exemplo, se IPV > média/mediana ou um valor de corte lógico
-        # Para demonstração, vamos usar IPV > 0.5 como um exemplo, mas isso deve ser definido pelo negócio.
         st.warning("Coluna 'N_Atingiu PV' não encontrada. Usando IPV > 0.5 como proxy para 'Atingiu_PV'.")
         df_q3['Atingiu_PV'] = (df_q3['IPV'] > df_q3['IPV'].median()).astype(int)
 
-    # Calcular a porcentagem de alunos que atingiram o PV por faixa de IEG
     pv_por_ieg_faixa = df_q3.groupby('IEG_Faixa')['Atingiu_PV'].mean().reset_index()
     pv_por_ieg_faixa['Percentual_PV'] = pv_por_ieg_faixa['Atingiu_PV'] * 100
 
@@ -314,17 +288,12 @@ def display_question_3(df):
     st.pyplot(fig_ieg_pv)
     plt.close(fig_ieg_pv)
 
-    # Identificar um ponto de corte (cut-off) para o IEG
-    # Isso pode ser feito visualmente ou programaticamente (e.g., onde a % de PV aumenta significativamente)
-    # Para este exemplo, vamos identificar a primeira faixa onde o percentual de PV é acima de um certo limiar, e a média geral.
     median_pv_percent = pv_por_ieg_faixa['Percentual_PV'].median()
     ieg_cut_off_candidates = pv_por_ieg_faixa[pv_por_ieg_faixa['Percentual_PV'] >= median_pv_percent]['IEG_Faixa'].iloc[0] if not pv_por_ieg_faixa[pv_por_ieg_faixa['Percentual_PV'] >= median_pv_percent].empty else "Não Identificado"
 
     st.subheader("Limiar de Engajamento (IEG) Sugerido")
     st.markdown(f"Com base na análise, um IEG médio **acima da mediana geral dos percentuais de PV** pode ser considerado um bom indicativo para o 'Ponto de Virada'. A primeira faixa de IEG que ultrapassa a mediana de percentual de PV é: **{ieg_cut_off_candidates}**.")
 
-    # Alerta para alunos abaixo do limiar
-    # Encontrar o valor numérico do cut-off. Se for 'X-Y', pegar o X.
     ieg_cut_off_value = None
     if isinstance(ieg_cut_off_candidates, str) and '-' in ieg_cut_off_candidates:
         try:
@@ -339,7 +308,7 @@ def display_question_3(df):
         st.info("Não foi possível determinar um limiar numérico claro de IEG para o alerta.")
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights do Gemini sobre o Limiar de Eficiência do Engajamento")
+    # st.subheader("Insights do Gemini sobre o Limiar de Eficiência do Engajamento")
 
     prompt_gemini = f"""
     Analise a relação entre o engajamento (IEG) e a ocorrência do 'Ponto de Virada' (PV) de alunos, com base nos seguintes resultados:
@@ -655,7 +624,6 @@ def display_question_7(df):
     st.header("Pergunta 7: Simulador de Virada")
     st.markdown("***Utilizar um modelo de Machine Learning para prever a probabilidade de um aluno atingir o 'Ponto de Virada' e permitir a simulação interativa.***")
 
-    # Certificar-se de que as colunas necessárias estão presentes e limpas
     required_cols_q7 = ["IDA", "IEG", "IPS", "IAA", "IPP", "N_Atingiu PV"]
     df_q7 = df.dropna(subset=required_cols_q7).copy()
 
@@ -666,7 +634,6 @@ def display_question_7(df):
     X = df_q7[["IDA", "IEG", "IPS", "IAA", "IPP"]]
     y = df_q7["N_Atingiu PV"]
 
-    # Verificar se há variância suficiente na variável alvo
     if y.nunique() < 2:
         st.warning("A variável alvo 'N_Atingiu PV' tem menos de 2 classes únicas, o que impede a criação do modelo de classificação.")
         return
@@ -697,21 +664,18 @@ def display_question_7(df):
     st.subheader("Simulador Interativo do Ponto de Virada")
     st.markdown("Ajuste os indicadores abaixo para ver como eles influenciam a probabilidade de um aluno atingir o 'Ponto de Virada'.")
 
-    # Usar os ranges min/max dos dados originais para os sliders
     min_ida, max_ida = df_q7['IDA'].min(), df_q7['IDA'].max()
     min_ieg, max_ieg = df_q7['IEG'].min(), df_q7['IEG'].max()
     min_ips, max_ips = df_q7['IPS'].min(), df_q7['IPS'].max()
     min_iaa, max_iaa = df_q7['IAA'].min(), df_q7['IAA'].max()
     min_ipp, max_ipp = df_q7['IPP'].min(), df_q7['IPP'].max()
 
-    # Sliders para os indicadores
     ida_sim = st.slider("IDA (Desempenho Acadêmico)", float(min_ida), float(max_ida), float(df_q7['IDA'].mean()))
     ieg_sim = st.slider("IEG (Engajamento)", float(min_ieg), float(max_ieg), float(df_q7['IEG'].mean()))
     ips_sim = st.slider("IPS (Aspectos Psicossociais)", float(min_ips), float(max_ips), float(df_q7['IPS'].mean()))
     iaa_sim = st.slider("IAA (Autoavaliação)", float(min_iaa), float(max_iaa), float(df_q7['IAA'].mean()))
     ipp_sim = st.slider("IPP (Perfil Psicopedagógico)", float(min_ipp), float(max_ipp), float(df_q7['IPP'].mean()))
 
-    # Preparar os dados simulados para a predição
     simulated_data = pd.DataFrame([{
         "IDA": ida_sim,
         "IEG": ieg_sim,
@@ -720,7 +684,6 @@ def display_question_7(df):
         "IPP": ipp_sim
     }])
 
-    # Prever a probabilidade
     simulated_prob = model_pv.predict_proba(simulated_data)[:, 1][0]
     st.metric("Probabilidade de Atingir o Ponto de Virada", f"{simulated_prob:.2%}")
 
@@ -880,7 +843,6 @@ def display_question_9(df):
     st.header("Pergunta 9: Modelo de Risco (Defasagem)")
     st.markdown("***Utilizar um modelo de Machine Learning para prever o risco de defasagem e fornecer explicações sobre os fatores contribuintes.***")
 
-    # Certificar-se de que as colunas necessárias estão presentes e limpas
     required_cols_q9 = ["IDA", "IEG", "IPS", "IAA", "IPP", "Defasagem"]
     df_q9 = df.dropna(subset=required_cols_q9).copy()
 
@@ -888,7 +850,6 @@ def display_question_9(df):
         st.warning("Não há dados suficientes para realizar a análise da Pergunta 9 após a remoção de valores ausentes.")
         return
 
-    # Definir 'Em_Risco' com base na mediana da defasagem
     df_q9["Em_Risco"] = np.where(
         df_q9["Defasagem"] > df_q9["Defasagem"].median(), # Assumindo que defasagem maior que a mediana é 'Em Risco'
         1,
@@ -898,7 +859,6 @@ def display_question_9(df):
     X_risco = df_q9[["IDA", "IEG", "IPS", "IAA", "IPP"]]
     y_risco = df_q9["Em_Risco"]
 
-    # Verificar se há variância suficiente na variável alvo
     if y_risco.nunique() < 2:
         st.warning("A variável alvo 'Em_Risco' tem menos de 2 classes únicas, o que impede a criação do modelo de classificação.")
         return
@@ -941,33 +901,28 @@ def display_question_9(df):
     st.markdown("O SHAP (SHapley Additive exPlanations) ajuda a entender como cada característica individual influencia a previsão do modelo para um aluno específico.")
 
     explainer = shap.TreeExplainer(model_risco)
-    shap_values_raw = explainer.shap_values(X_risco) # This is a list of arrays
+    shap_values_raw = explainer.shap_values(X_risco) 
 
-    # Convert shap_values for positive class into a DataFrame with X_risco's index
     shap_values_df = pd.DataFrame(shap_values_raw[1], columns=X_risco.columns, index=X_risco.index)
 
-    # Criar uma 'Fila de Prioridade' para alunos em risco
     df_q9['Prob_Risco'] = model_risco.predict_proba(X_risco)[:, 1]
     fila_prioridade = df_q9.sort_values(by='Prob_Risco', ascending=False).head(10)
 
     st.write("**Fila de Prioridade (Top 10 Alunos com Maior Probabilidade de Risco):**")
     st.dataframe(fila_prioridade[['RA', 'Fase', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP', 'Prob_Risco']])
 
-    # Selecionar um aluno para análise detalhada de SHAP
     if not fila_prioridade.empty:
         selected_ra = st.selectbox("Selecione um RA da fila de prioridade para ver os fatores contribuintes:", fila_prioridade['RA'].unique())
         if selected_ra:
             student_original_label = df_q9[df_q9['RA'] == selected_ra].index[0]
             st.write(f"**Fatores Contribuintes para o aluno RA: {selected_ra}**")
 
-            # Directly get SHAP values for the selected student by label from the DataFrame
             if student_original_label not in shap_values_df.index:
                 st.warning(f"O RA {selected_ra} (índice original {student_original_label}) não foi encontrado no DataFrame de valores SHAP. Pode haver uma inconsistência nos dados ou na indexação.")
                 return
 
-            shap_values_single = shap_values_df.loc[student_original_label].values # Get the numpy array from the Series
+            shap_values_single = shap_values_df.loc[student_original_label].values
 
-            # Get the features for this student using the original label
             features_single = X_risco.loc[student_original_label]
 
             shap_df = pd.DataFrame({
@@ -976,11 +931,10 @@ def display_question_9(df):
             }).sort_values(by='SHAP_Value', key=abs, ascending=False)
             st.dataframe(shap_df)
 
-            # Plotar os SHAP values para o aluno selecionado
             fig_shap = plt.figure(figsize=(10, 6))
             shap.plots.waterfall(shap.Explanation(
                 values=shap_values_single,
-                base_values=explainer.expected_value[1], # Expected value for the positive class
+                base_values=explainer.expected_value[1],
                 data=features_single.values,
                 feature_names=X_risco.columns.tolist()
             ), show=False)
@@ -990,39 +944,37 @@ def display_question_9(df):
         st.info("A fila de prioridade está vazia para seleção.")
 
     # --- Geração de Insights com a API do Gemini ---
-    st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
+    # st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
 
-    if st.button("Gerar Insights do Gemini (Pergunta 9)"):
-        prompt_gemini = f"""
-        Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
-        
-        **Desempenho do Modelo:**
-        - AUC do Modelo de Risco: {auc_risco:.3f}
+    prompt_gemini = f"""
+    Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
+    
+    **Desempenho do Modelo:**
+    - AUC do Modelo de Risco: {auc_risco:.3f}
 
-        **Fila de Prioridade (Top 10 Alunos):**
-        ```
-        {fila_prioridade[['RA', 'Prob_Risco', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP']].to_string()}
-        ```
+    **Fila de Prioridade (Top 10 Alunos):**
+    ```
+    {fila_prioridade[['RA', 'Prob_Risco', 'IDA', 'IEG', 'IPS', 'IAA', 'IPP']].to_string()}
+    ```
 
-        Com base nesses dados e no conceito de fatores contribuintes do SHAP, forneça:
-        1. Uma interpretação do desempenho do modelo (AUC).
-        2. Análise dos padrões dos alunos na fila de prioridade e os principais indicadores que os colocam em risco.
-        3. Sugestões de ações práticas e personalizadas para a 'Passos Mágicos' intervir com esses alunos de alto risco, focando nos indicadores que mais contribuem para o risco de defasagem (como indicado pelos SHAP values).
-        4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
-        """
+    Com base nesses dados e no conceito de fatores contribuintes do SHAP, forneça:
+    1. Uma interpretação do desempenho do modelo (AUC).
+    2. Análise dos padrões dos alunos na fila de prioridade e os principais indicadores que os colocam em risco.
+    3. Sugestões de ações práticas e personalizadas para a 'Passos Mágicos' intervir com esses alunos de alto risco, focando nos indicadores que mais contribuem para o risco de defasagem (como indicado pelos SHAP values).
+    4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
+    """
 
-        gemini_insights = generate_gemini_insights(prompt_gemini)
+    gemini_insights = generate_gemini_insights(prompt_gemini)
 
-        if gemini_insights:
-            st.markdown(gemini_insights)
-        else:
-            st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
+    if gemini_insights:
+        st.markdown(gemini_insights)
+    else:
+        st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
 
 def display_question_10(df):
     st.header("Pergunta 10: Índice de Valor Adicionado (IVA)")
     st.markdown("***Analisar o \"Valor Adicionado\" gerado pela \"Passos Mágicos\" no desempenho dos alunos, segmentado por fase, e gerar insights para investidores.***")
 
-    # Preparar dados para análise da evolução do INDE por Fase
     inde_long = df.melt(
         id_vars=["RA", "Fase"],
         value_vars=["INDE 2022", "INDE 2023"],
@@ -1033,7 +985,6 @@ def display_question_10(df):
     inde_long["Ano"] = inde_long["Ano"].str.replace("INDE ", "").astype(int)
     inde_long["Fase"] = pd.to_numeric(inde_long["Fase"], errors="coerce")
 
-    # Filtrar fases válidas
     inde_long = inde_long.dropna(subset=["Fase"])
 
     # --- Evolução do INDE por Fase ---
@@ -1074,29 +1025,21 @@ def display_question_10(df):
     st.subheader("Cálculo do Índice de Valor Adicionado (IVA)")
     st.markdown("O IVA mede o ganho de desempenho de um aluno em relação à média de sua fase.")
 
-    # Calcular a média de evolução da fase
-    # Para simplificar, vamos considerar a diferença INDE 2024 - INDE 2022 como a evolução do aluno
-    # E a média dessa diferença por fase como a evolução média da fase.
     df_q10 = df.copy()
     df_q10['Evolucao_Aluno'] = df_q10['INDE 2023'] - df_q10['INDE 2022']
 
-    # Calcular a média de evolução por fase
     media_evolucao_fase = df_q10.groupby('Fase')['Evolucao_Aluno'].mean().reset_index()
     media_evolucao_fase.rename(columns={'Evolucao_Aluno': 'Media_Evolucao_da_Fase'}, inplace=True)
 
-    # Juntar a média de evolução da fase de volta ao dataframe principal
     df_q10 = pd.merge(df_q10, media_evolucao_fase, on='Fase', how='left')
 
-    # Calcular o IVA (Índice de Valor Adicionado)
     df_q10['IVA'] = df_q10['Evolucao_Aluno'] - df_q10['Media_Evolucao_da_Fase']
 
-    # Mostrar os alunos com maior IVA
     st.write("**Top 10 Alunos com Maior Valor Adicionado (IVA):**")
     st.dataframe(df_q10.sort_values(by='IVA', ascending=False).head(10)[['RA', 'Fase', 'Evolucao_Aluno', 'Media_Evolucao_da_Fase', 'IVA']])
 
     st.write("**Top 10 Alunos com Menor Valor Adicionado (IVA):**")
     st.dataframe(df_q10.sort_values(by='IVA', ascending=True).head(10)[['RA', 'Fase', 'Evolucao_Aluno', 'Media_Evolucao_da_Fase', 'IVA']])
-
 
     # --- Selo de Impacto (Agregado) ---
     st.subheader("Selo de Impacto da Passos Mágicos")
@@ -1109,7 +1052,7 @@ def display_question_10(df):
     st.info("Um IVA positivo indica que, em média, os alunos da Passos Mágicos superam a evolução esperada para sua fase, demonstrando o valor adicionado pela instituição.")
 
     # --- Geração de Insights com a API do Gemini para Investidores ---
-    st.subheader("Insights do Gemini para Investidores")
+    # st.subheader("Insights do Gemini para Investidores")
 
     prompt_gemini = f"""
     Prepare um resumo executivo para potenciais investidores, destacando o "Valor Adicionado" que a "Passos Mágicos" gera no desempenho dos alunos. Utilize os seguintes dados:
@@ -1367,6 +1310,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
