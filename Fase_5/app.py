@@ -905,7 +905,31 @@ def display_question_9(df):
     st.markdown("O SHAP (SHapley Additive exPlanations) ajuda a entender como cada característica individual influencia a previsão do modelo para um aluno específico.")
 
     explainer = shap.TreeExplainer(model_risco)
-    shap_values_raw = explainer.shap_values(X_risco) 
+    # Passar X_risco.values para shap_values para garantir que seja um numpy array e evitar problemas de índice
+    shap_values_raw = explainer.shap_values(X_risco.values)
+
+    # Debug prints para entender as formas
+    st.write(f"Debug: Type of shap_values_raw: {type(shap_values_raw)}")
+    if isinstance(shap_values_raw, list):
+        st.write(f"Debug: Length of shap_values_raw: {len(shap_values_raw)}")
+        if len(shap_values_raw) > 1:
+            st.write(f"Debug: Shape of shap_values_raw[1]: {shap_values_raw[1].shape}")
+        else:
+            st.write(f"Debug: shap_values_raw é uma lista mas tem menos de 2 elementos. Shape de shap_values_raw[0]: {shap_values_raw[0].shape}")
+    else:
+        st.write(f"Debug: shap_values_raw é um único array. Shape: {shap_values_raw.shape}")
+    st.write(f"Debug: Shape de X_risco: {X_risco.shape}")
+
+    # Garantir que shap_values_raw tem o formato esperado para classificação binária
+    if not isinstance(shap_values_raw, list) or len(shap_values_raw) < 2 or not isinstance(shap_values_raw[1], np.ndarray):
+        st.error("Erro: `explainer.shap_values` não retornou o formato esperado para classificação binária (lista de 2 arrays numpy).")
+        return
+
+    # Verificar se a forma dos valores SHAP para a classe positiva corresponde à de X_risco
+    if shap_values_raw[1].shape != X_risco.shape:
+        st.error(f"Erro: A forma dos valores SHAP para a classe positiva ({shap_values_raw[1].shape}) não corresponde à forma de X_risco ({X_risco.shape}).")
+        st.error("Isso indica um problema na geração dos valores SHAP. Verifique a versão do SHAP e a compatibilidade do modelo.")
+        return
 
     shap_values_df = pd.DataFrame(shap_values_raw[1], columns=X_risco.columns, index=X_risco.index)
 
@@ -1314,6 +1338,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
