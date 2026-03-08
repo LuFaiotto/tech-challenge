@@ -920,18 +920,23 @@ def display_question_9(df):
         st.write(f"Debug: shap_values_raw é um único array. Shape: {shap_values_raw.shape}")
     st.write(f"Debug: Shape de X_risco: {X_risco.shape}")
 
-    # Garantir que shap_values_raw tem o formato esperado para classificação binária
-    if not isinstance(shap_values_raw, list) or len(shap_values_raw) < 2 or not isinstance(shap_values_raw[1], np.ndarray):
-        st.error("Erro: `explainer.shap_values` não retornou o formato esperado para classificação binária (lista de 2 arrays numpy).")
+    if isinstance(shap_values_raw, list) and len(shap_values_raw) == 2:
+        # Common case for binary classification where shap_values_raw is [shap_class_0, shap_class_1]
+        shap_values_for_positive_class = shap_values_raw[1]
+    elif isinstance(shap_values_raw, np.ndarray) and shap_values_raw.ndim == 3 and shap_values_raw.shape[2] == 2:
+        # Case for 3D array: (n_samples, n_features, n_classes)
+        shap_values_for_positive_class = shap_values_raw[:, :, 1]
+    else:
+        st.error("Erro: `explainer.shap_values` retornou um formato inesperado. Não foi possível extrair os valores SHAP para a classe positiva.")
         return
 
     # Verificar se a forma dos valores SHAP para a classe positiva corresponde à de X_risco
-    if shap_values_raw[1].shape != X_risco.shape:
-        st.error(f"Erro: A forma dos valores SHAP para a classe positiva ({shap_values_raw[1].shape}) não corresponde à forma de X_risco ({X_risco.shape}).")
+    if shap_values_for_positive_class.shape != X_risco.shape:
+        st.error(f"Erro: A forma dos valores SHAP para a classe positiva ({shap_values_for_positive_class.shape}) não corresponde à forma de X_risco ({X_risco.shape}).")
         st.error("Isso indica um problema na geração dos valores SHAP. Verifique a versão do SHAP e a compatibilidade do modelo.")
         return
 
-    shap_values_df = pd.DataFrame(shap_values_raw[1], columns=X_risco.columns, index=X_risco.index)
+    shap_values_df = pd.DataFrame(shap_values_for_positive_class, columns=X_risco.columns, index=X_risco.index)
 
     df_q9['Prob_Risco'] = model_risco.predict_proba(X_risco)[:, 1]
     fila_prioridade = df_q9.sort_values(by='Prob_Risco', ascending=False).head(10)
@@ -1338,6 +1343,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
