@@ -325,22 +325,15 @@ def display_question_3(df):
     st.pyplot(fig_ieg_pv)
     plt.close(fig_ieg_pv)
 
-    median_pv_percent = pv_por_ieg_faixa['Percentual_PV'].median()
-    ieg_cut_off_candidates = pv_por_ieg_faixa[pv_por_ieg_faixa['Percentual_PV'] >= median_pv_percent]['IEG_Faixa'].iloc[0] if not pv_por_ieg_faixa[pv_por_ieg_faixa['Percentual_PV'] >= median_pv_percent].empty else "Não Identificado"
-
+    # Usando a mediana do IEG de todos os alunos como um limiar mais significativo.
+    ieg_cut_off_value = df_q3['IEG'].median()
+    
     st.subheader("Limiar de Engajamento (IEG) Sugerido")
-    st.markdown(f"Com base na análise, um IEG médio **acima da mediana geral dos percentuais de PV** pode ser considerado um bom indicativo para o 'Ponto de Virada'. A primeira faixa de IEG que ultrapassa a mediana de percentual de PV é: **{ieg_cut_off_candidates}**.")
-
-    ieg_cut_off_value = None
-    if isinstance(ieg_cut_off_candidates, str) and '-' in ieg_cut_off_candidates:
-        try:
-            ieg_cut_off_value = float(ieg_cut_off_candidates.split('-')[0])
-        except ValueError:
-            ieg_cut_off_value = None
+    st.markdown(f"Com base na análise, o **IEG mediano** entre todos os alunos é **{ieg_cut_off_value:.2f}**. Alunos com IEG abaixo deste valor podem ser considerados com engajamento mais baixo, o que pode impactar sua probabilidade de atingir o 'Ponto de Virada'.")
 
     if ieg_cut_off_value is not None:
         alunos_abaixo_limiar = df_q3[df_q3['IEG'] < ieg_cut_off_value]
-        st.warning(f"**Alerta**: Há {len(alunos_abaixo_limiar)} alunos com IEG abaixo do limiar sugerido de {ieg_cut_off_value}. Estes alunos podem precisar de intervenções específicas para aumentar o engajamento.")
+        st.warning(f"**Alerta**: Há {len(alunos_abaixo_limiar)} alunos com IEG abaixo do limiar sugerido de {ieg_cut_off_value:.2f}. Estes alunos podem precisar de intervenções específicas para aumentar o engajamento.")
     else:
         st.info("Não foi possível determinar um limiar numérico claro de IEG para o alerta.")
 
@@ -356,12 +349,12 @@ def display_question_3(df):
     ```
 
     **2. Limiar de Engajamento (IEG) Sugerido:**
-    {ieg_cut_off_candidates}
+    O IEG mediano entre todos os alunos é {ieg_cut_off_value:.2f}.
 
     Com base nesses dados, por favor, forneça:
-    1. Uma interpretação clara do limiar de IEG identificado e sua importância para o 'Ponto de Virada'.
+    1. Uma interpretação clara do IEG mediano como um limiar e sua importância para o 'Ponto de Virada'.
     2. Quais são as implicações práticas desse limiar para a instituição 'Passos Mágicos' na identificação e suporte de alunos?
-    3. Sugira estratégias de intervenção específicas para alunos que se encontram abaixo do limiar de IEG, visando aumentar seu engajamento e a probabilidade de atingirem o 'Ponto de Virada'.
+    3. Sugira estratégias de intervenção específicas para alunos que se encontram abaixo do IEG mediano, visando aumentar seu engajamento e a probabilidade de atingirem o 'Ponto de Virada'.
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
@@ -1372,6 +1365,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
