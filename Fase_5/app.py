@@ -263,6 +263,39 @@ def display_question_3(df):
     st.header("Pergunta 3: Limiar de Eficiência do Engajamento")
     st.markdown("***Analisar a relação entre o engajamento (IEG) e a ocorrência do 'Ponto de Virada' (PV) para identificar um limiar de IEG.***")
 
+    # Calcula a média do INDE para os anos 2022, 2023 e 2024
+    df["INDE_Media"] = df[["INDE 2022", "INDE 2023", "INDE 2024"]].mean(axis=1)
+
+    # Agrupa por Fase e calcula a média do INDE_Media
+    media_fase = (
+        df.groupby("Fase")["INDE_Media"]
+        .mean()
+        .reset_index()
+    )
+
+    # Converte 'Fase' para numérico e remove NaNs
+    media_fase["Fase"] = pd.to_numeric(media_fase["Fase"], errors="coerce")
+    media_fase = media_fase.dropna(subset=["Fase"])
+    media_fase = media_fase.sort_values("Fase")
+
+    # Cria o gráfico de barras
+    fig3, ax3 = plt.subplots(figsize=(10,5))
+
+    ax3.bar(
+        media_fase["Fase"],
+        media_fase["INDE_Media"],
+        width=0.6
+    )
+
+    ax3.set_xticks(media_fase["Fase"])
+    ax3.set_xticklabels(media_fase["Fase"].astype(int))
+    ax3.set_title("Média Geral do INDE por Fase", fontsize=14, weight="bold")
+    ax3.set_xlabel("Fase")
+    ax3.set_ylabel("Média INDE")
+    ax3.grid(axis="y", alpha=0.3)
+    st.pyplot(fig3)
+    plt.close(fig3)
+    
     df_q3 = df.dropna(subset=["IEG", "IPV"]).copy()
 
     bins = np.arange(0, 11, 1)
@@ -1339,6 +1372,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
