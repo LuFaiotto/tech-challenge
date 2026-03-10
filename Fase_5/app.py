@@ -1131,6 +1131,15 @@ def display_question_10(df):
 
     st.info("Um IVA positivo indica que, em média, os alunos da Passos Mágicos superam a evolução esperada para sua fase, demonstrando o valor adicionado pela instituição.")
 
+    st.markdown("""
+    **Entendendo a Média Geral do IVA:**
+    *   O Índice de Valor Adicionado (IVA) é calculado pela diferença entre a evolução individual de um aluno no INDE e a evolução média de sua respectiva Fase.
+    *   Um IVA **positivo** indica que o aluno superou a média de evolução de sua fase. Um IVA **negativo** indica que o aluno evoluiu menos que a média de sua fase.
+    *   Uma **Média Geral do IVA igual a 0.00** significa que, em média, o impacto líquido da \"Passos Mágicos\" sobre a evolução dos alunos (considerando o desempenho em relação às suas fases) foi neutro neste período. Ou seja, os ganhos de alguns alunos que superaram a média foram compensados por outros que ficaram abaixo, resultando em um equilíbrio.
+    *   Um IVA geral **próximo de zero** é um resultado matematicamente correto e sugere que, embora a instituição possa estar mantendo os alunos no ritmo geral de suas fases, há espaço para otimizar as intervenções e impulsionar a maioria dos alunos a superar consistentemente a evolução esperada.
+    *   Para atrair investidores, um IVA positivo e crescente seria mais desejável, pois demonstraria que a instituição está elevando o patamar de desempenho de seus alunos acima do que seria esperado organicamente.
+    """)
+
     # --- Geração de Insights com a API do Gemini para Investidores ---
     # st.subheader("Insights do Gemini para Investidores")
 
@@ -1148,6 +1157,9 @@ def display_question_10(df):
         ```
         {df_q10.sort_values(by='IVA', ascending=False).head(10)[['RA', 'Fase', 'IVA']].to_string()}
         ```
+
+    **Considerações sobre a Média Geral do IVA (para contextualização):**
+    A Média Geral do IVA é 0.00 (ou próxima de zero). Isso indica que, em média, o impacto líquido da \"Passos Mágicos\" sobre a evolução dos alunos foi neutro em relação à evolução esperada para suas fases. Apresente essa informação de forma estratégica para investidores, focando no potencial de crescimento e nas áreas onde a instituição já demonstrou sucesso.
 
     Com base nesses dados, apresente:
     1. Uma narrativa convincente sobre o impacto educacional da Passos Mágicos, focando no IVA como prova de eficácia.
@@ -1392,6 +1404,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
