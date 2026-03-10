@@ -694,17 +694,12 @@ def display_question_7(df):
     st.subheader("Simulador Interativo do Ponto de Virada")
     st.markdown("Ajuste os indicadores abaixo para ver como eles influenciam a probabilidade de um aluno atingir o 'Ponto de Virada'.")
 
-    min_ida, max_ida = df_q7['IDA'].min(), df_q7['IDA'].max()
-    min_ieg, max_ieg = df_q7['IEG'].min(), df_q7['IEG'].max()
-    min_ips, max_ips = df_q7['IPS'].min(), df_q7['IPS'].max()
-    min_iaa, max_iaa = df_q7['IAA'].min(), df_q7['IAA'].max()
-    min_ipp, max_ipp = df_q7['IPP'].min(), df_q7['IPP'].max()
-
-    ida_sim = st.slider("IDA (Desempenho Acadêmico)", float(min_ida), float(max_ida), float(df_q7['IDA'].mean()))
-    ieg_sim = st.slider("IEG (Engajamento)", float(min_ieg), float(max_ieg), float(df_q7['IEG'].mean()))
-    ips_sim = st.slider("IPS (Aspectos Psicossociais)", float(min_ips), float(max_ips), float(df_q7['IPS'].mean()))
-    iaa_sim = st.slider("IAA (Autoavaliação)", float(min_iaa), float(max_iaa), float(df_q7['IAA'].mean()))
-    ipp_sim = st.slider("IPP (Perfil Psicopedagógico)", float(min_ipp), float(max_ipp), float(df_q7['IPP'].mean()))
+    # Sliders para os indicadores com faixa de 0 a 10
+    ida_sim = st.slider("IDA (Desempenho Acadêmico)", min_value=0.0, max_value=10.0, value=float(df_q7['IDA'].mean()))
+    ieg_sim = st.slider("IEG (Engajamento)", min_value=0.0, max_value=10.0, value=float(df_q7['IEG'].mean()))
+    ips_sim = st.slider("IPS (Aspectos Psicossociais)", min_value=0.0, max_value=10.0, value=float(df_q7['IPS'].mean()))
+    iaa_sim = st.slider("IAA (Autoavaliação)", min_value=0.0, max_value=10.0, value=float(df_q7['IAA'].mean()))
+    ipp_sim = st.slider("IPP (Perfil Psicopedagógico)", min_value=0.0, max_value=10.0, value=float(df_q7['IPP'].mean()))
 
     simulated_data = pd.DataFrame([{
         "IDA": ida_sim,
@@ -728,6 +723,7 @@ def display_question_7(df):
         - IPS (Aspectos Psicossociais): {ips_sim:.2f}
         - IAA (Autoavaliação): {iaa_sim:.2f}
         - IPP (Perfil Psicopedagógico): {ipp_sim:.2f}
+        Todos os indicadores (IDA, IEG, IPS, IAA, IPP) são medidos em uma escala de 0 a 10.
         
         A probabilidade atual estimada de ele atingir o 'Ponto de Virada' é de {simulated_prob:.2%}.
 
@@ -1365,6 +1361,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
