@@ -414,7 +414,7 @@ def display_question_4(df):
     st.pyplot(plt.gcf())
     plt.close() # Fecha a figura para evitar sobreposição em futuras chamadas
     st.markdown("""
-    **Interpretação do Gráfico de Dispersão (IAA vs IDA)**: Observe como os pontos se distribuem em relação à linha de 45 graus. Alunos cujos pontos estão próximos a essa linha tendem a ter uma autoavaliação coerente com seu desempenho real. Pontos acima da linha podem indicar superestimação (IAA > IDA), enquanto pontos abaixo podem sugerir subestimação (IAA < IDA).
+    **Gráfico de Dispersão (IAA vs IDA)**: Observe como os pontos se distribuem em relação à linha de 45 graus. Alunos cujos pontos estão próximos a essa linha tendem a ter uma autoavaliação coerente com seu desempenho real. Pontos acima da linha podem indicar superestimação (IAA > IDA), enquanto pontos abaixo podem sugerir subestimação (IAA < IDA).
     """)
 
     # Gráfico 2: IAA (autoavaliação) vs IEG (engajamento)
@@ -424,7 +424,7 @@ def display_question_4(df):
     st.pyplot(plt.gcf())
     plt.close()
     st.markdown("""
-    **Interpretação do Gráfico de Dispersão (IAA vs IEG)**: Similarmente, este gráfico mostra a relação entre a autoavaliação e o engajamento. A linha de 45 graus serve como um benchmark para a coerência. A dispersão dos pontos pode revelar se alunos com alto engajamento tendem a se autoavaliar melhor, ou vice-versa, e se há desalinhamentos significativos.
+    **Gráfico de Dispersão (IAA vs IEG)**: Similarmente, este gráfico mostra a relação entre a autoavaliação e o engajamento. A linha de 45 graus serve como um benchmark para a coerência. A dispersão dos pontos pode revelar se alunos com alto engajamento tendem a se autoavaliar melhor, ou vice-versa, e se há desalinhamentos significativos.
     """)
 
     # Gráfico 3: IAA vs IDA por Sexo
@@ -440,7 +440,7 @@ def display_question_4(df):
     st.pyplot(g.fig)
     plt.close(g.fig)
     st.markdown("""
-    **Interpretação do Gráfico de Dispersão (IAA vs IDA por Sexo)**: Este gráfico segmenta a análise da coerência entre autoavaliação e desempenho por gênero. É possível observar se há diferenças nos padrões de superestimação ou subestimação entre sexos, o que pode indicar a necessidade de abordagens pedagógicas ou de suporte psicológico diferenciadas.
+    **Gráfico de Dispersão (IAA vs IDA por Sexo)**: Este gráfico segmenta a análise da coerência entre autoavaliação e desempenho por gênero. É possível observar se há diferenças nos padrões de superestimação ou subestimação entre sexos, o que pode indicar a necessidade de abordagens pedagógicas ou de suporte psicológico diferenciadas.
     """)
 
     # --- Matriz de Perfil Psico-Pedagógico (IDA e IAA) ---
@@ -1426,6 +1426,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
