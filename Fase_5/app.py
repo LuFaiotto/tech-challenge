@@ -382,6 +382,10 @@ def display_question_4(df):
 
     df_clean_q4 = df.dropna(subset=["IAA", "IDA", "IEG"]).copy()
 
+    st.markdown("""
+    Nesta seção, exploramos a coerência entre a **Autoavaliação (IAA)** dos alunos e seus resultados em **Desempenho Real (IDA)** e **Engajamento (IEG)**. Uma percepção alinhada com a realidade é crucial para o desenvolvimento do aluno.
+    """)
+
     # Coeficientes de correlação (Pearson):
     corr_iaa_ida, p_iaa_ida = pearsonr(df_clean_q4["IAA"], df_clean_q4["IDA"])
     corr_iaa_ieg, p_iaa_ieg = pearsonr(df_clean_q4["IAA"], df_clean_q4["IEG"])
@@ -394,8 +398,14 @@ def display_question_4(df):
         "p < 0.05 sugere que a correlação não é devido ao acaso.</i></small>",
         unsafe_allow_html=True
     )
+    st.markdown("""
+    As correlações de Pearson nos ajudam a quantificar a força e a direção da relação entre a autoavaliação do aluno e seu desempenho e engajamento. Uma correlação positiva indica que, à medida que um aumenta, o outro também tende a aumentar. O valor-p nos informa sobre a significância estatística dessa relação.
+    """)
 
     st.subheader("Visualizações")
+    st.markdown("""
+    Os gráficos de dispersão a seguir visualizam a relação entre a autoavaliação (IAA) e os outros indicadores. A linha tracejada roxa representa a linha de 45 graus, onde os valores de X e Y são iguais, indicando uma perfeita coerência. A linha de regressão vermelha mostra a tendência geral dos dados.
+    """)
 
     # Gráfico 1: IAA (autoavaliação) vs IDA (desempenho real)
     plot_reg_with_45_deg_line(df_clean_q4, "IDA", "IAA",
@@ -403,6 +413,9 @@ def display_question_4(df):
                               "IDA (Desempenho Real)", "IAA (Autoavaliação)")
     st.pyplot(plt.gcf())
     plt.close() # Fecha a figura para evitar sobreposição em futuras chamadas
+    st.markdown("""
+    **Interpretação do Gráfico de Dispersão (IAA vs IDA)**: Observe como os pontos se distribuem em relação à linha de 45 graus. Alunos cujos pontos estão próximos a essa linha tendem a ter uma autoavaliação coerente com seu desempenho real. Pontos acima da linha podem indicar superestimação (IAA > IDA), enquanto pontos abaixo podem sugerir subestimação (IAA < IDA).
+    """)
 
     # Gráfico 2: IAA (autoavaliação) vs IEG (engajamento)
     plot_reg_with_45_deg_line(df_clean_q4, "IEG", "IAA",
@@ -410,6 +423,9 @@ def display_question_4(df):
                               "IEG (Engajamento)", "IAA (Autoavaliação)")
     st.pyplot(plt.gcf())
     plt.close()
+    st.markdown("""
+    **Interpretação do Gráfico de Dispersão (IAA vs IEG)**: Similarmente, este gráfico mostra a relação entre a autoavaliação e o engajamento. A linha de 45 graus serve como um benchmark para a coerência. A dispersão dos pontos pode revelar se alunos com alto engajamento tendem a se autoavaliar melhor, ou vice-versa, e se há desalinhamentos significativos.
+    """)
 
     # Gráfico 3: IAA vs IDA por Sexo
     plt.figure(figsize=(10, 7))
@@ -423,6 +439,9 @@ def display_question_4(df):
     plt.tight_layout()
     st.pyplot(g.fig)
     plt.close(g.fig)
+    st.markdown("""
+    **Interpretação do Gráfico de Dispersão (IAA vs IDA por Sexo)**: Este gráfico segmenta a análise da coerência entre autoavaliação e desempenho por gênero. É possível observar se há diferenças nos padrões de superestimação ou subestimação entre sexos, o que pode indicar a necessidade de abordagens pedagógicas ou de suporte psicológico diferenciadas.
+    """)
 
     # --- Matriz de Perfil Psico-Pedagógico (IDA e IAA) ---
     st.subheader("Matriz de Perfil Psico-Pedagógico (IDA vs IAA)")
@@ -466,6 +485,9 @@ def display_question_4(df):
     plt.tight_layout()
     st.pyplot(fig_quadrant)
     plt.close(fig_quadrant)
+    st.markdown("""
+    Este gráfico oferece uma visão visual rápida da proporção de alunos em cada perfil. É uma forma eficaz de identificar rapidamente os grupos predominantes e a magnitude dos desafios (como 'Iludidos' e 'Em Risco') que a instituição pode enfrentar.
+    """)
 
     # --- Geração de Insights com a API do Gemini ---
     
@@ -1404,6 +1426,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
