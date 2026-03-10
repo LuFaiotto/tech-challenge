@@ -258,12 +258,13 @@ def display_question_2(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_3(df):
     st.header("Pergunta 3: Limiar de Eficiência do Engajamento")
@@ -367,12 +368,13 @@ def display_question_3(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_4(df):
     st.header("Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)")
@@ -487,12 +489,13 @@ def display_question_4(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_5(df):
     st.header("Pergunta 5: Aspectos Psicossociais (IPS) e Quedas de Desempenho")
@@ -553,12 +556,13 @@ Com base nesses dados, por favor, forneça:
 4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 
 def display_question_6(df):
@@ -652,12 +656,13 @@ def display_question_6(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_7(df):
     st.header("Pergunta 7: Simulador de Virada")
@@ -871,12 +876,13 @@ def display_question_8(df):
     5. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_9(df):
     st.header("Pergunta 9: Modelo de Risco (Defasagem)")
@@ -1033,12 +1039,13 @@ def display_question_9(df):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
 
 def display_question_10(df):
     st.header("Pergunta 10: Índice de Valor Adicionado (IVA)")
@@ -1149,12 +1156,13 @@ def display_question_10(df):
     4. Formule a resposta de forma clara, concisa e orientada para investidores, utilizando linguagem persuasiva e dados para corroborar as afirmações.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights para investidores com o Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights para investidores com o Gemini. Verifique a configuração da API.")
 
 def display_question_11(df, numeric_cols_to_clean):
     st.header("Pergunta 11: Insights Adicionais e Criatividade")
@@ -1281,12 +1289,13 @@ def display_question_11(df, numeric_cols_to_clean):
     4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
-    gemini_insights = generate_gemini_insights(prompt_gemini)
-
-    if gemini_insights:
-        st.markdown(gemini_insights)
-    else:
-        st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
+    if st.button("Gerar Insights Adicionais"):
+        gemini_insights = generate_gemini_insights(prompt_gemini)
+    
+        if gemini_insights:
+            st.markdown(gemini_insights)
+        else:
+            st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 
 def main():
@@ -1383,6 +1392,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
