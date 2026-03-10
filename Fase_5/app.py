@@ -295,6 +295,9 @@ def display_question_3(df):
     ax3.grid(axis="y", alpha=0.3)
     st.pyplot(fig3)
     plt.close(fig3)
+
+    st.write("Observa-se que as fases possuem desempenho relativamente equilibrado, com pequenas variações entre elas. Não há discrepâncias extremas, o que indica homogeneidade no desempenho entre os grupos.")
+    st.write("Algumas fases apresentam médias ligeiramente superiores, podendo indicar melhor adaptação ao conteúdo ou maturidade acadêmica maior. De forma geral, o padrão é estável entre as fases.")
     
     df_q3 = df.dropna(subset=["IEG", "IPV"]).copy()
 
@@ -691,6 +694,10 @@ def display_question_7(df):
     st.pyplot(fig_importances)
     plt.close(fig_importances)
 
+    st.write(f"""O modelo preditivo desenvolvido para identificar o “Ponto de Virada” apresentou AUC de {auc_pv:.3f}, o que indica excelente capacidade de discriminação.""")
+    st.write("Um AUC próximo de 0,90 demonstra que o modelo consegue diferenciar com alta precisão os alunos que atingem o ponto de virada daqueles que não atingem. O gráfico de importância das variáveis mostra quais indicadores possuem maior peso na previsão, permitindo identificar os fatores mais determinantes para mudança significativa no desempenho.")
+    st.write("Esse resultado valida a utilização do modelo como ferramenta estratégica para tomada de decisão.")
+    
     st.subheader("Simulador Interativo do Ponto de Virada")
     st.markdown("Ajuste os indicadores abaixo para ver como eles influenciam a probabilidade de um aluno atingir o 'Ponto de Virada'.")
 
@@ -922,6 +929,11 @@ def display_question_9(df):
     st.pyplot(fig_hist)
     plt.close(fig_hist)
 
+    st.write(f"""O modelo de previsão de risco acadêmico apresentou AUC de {auc_risco:.3f}""")
+    st.write("Esse valor indica capacidade preditiva moderada. O modelo consegue identificar tendências de risco, porém com menor precisão quando comparado ao modelo de ponto de virada.")
+    st.write("Isso sugere que a variável 'defasagem' pode depender de fatores adicionais que não estão totalmente capturados pelos indicadores analisados.")
+    st.write("Ainda assim, o modelo é útil como ferramenta de apoio para identificação preventiva de alunos com maior probabilidade de risco.")
+
     # --- SHAP para Explicabilidade ---
     st.subheader("Explicabilidade do Modelo (SHAP)")
     st.markdown("O SHAP (SHapley Additive exPlanations) ajuda a entender como cada característica individual influencia a previsão do modelo para um aluno específico.")
@@ -1071,6 +1083,10 @@ def display_question_10(df):
     plt.tight_layout()
     st.pyplot(fig_fase_evol)
     plt.close(fig_fase_evol)
+
+    st.write("Observa-se que a maioria das fases apresenta crescimento ao longo do tempo, indicando evolução positiva do desempenho acadêmico.")
+    st.write("Algumas fases demonstram crescimento mais acentuado, enquanto outras apresentam evolução mais gradual. Esse comportamento permite identificar quais grupos tiveram maior progresso e quais podem demandar estratégias específicas de acompanhamento.")
+    st.write("A análise temporal por fase é fundamental para monitoramento contínuo e planejamento pedagógico estratégico.")
 
     # --- Cálculo do Índice de Valor Adicionado (IVA) ---
     st.subheader("Cálculo do Índice de Valor Adicionado (IVA)")
@@ -1361,6 +1377,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
