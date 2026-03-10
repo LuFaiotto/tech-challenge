@@ -160,6 +160,9 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
     return results_for_prompt
 
 def display_question_1(df):
+    st.header("Pergunta 1 - Adequação do nível (IAN)")
+    st.markdown("***Qual é o perfil geral de defasagem dos alunos (IAN) e como ele evolui ao longo do ano?***")
+
     st.subheader("Distribuição do INDE 2024")
     col1, col2 = st.columns([2, 1])
 
@@ -179,8 +182,8 @@ def display_question_1(df):
     st.write("Observa-se que a média do INDE é 7,4, com desvio padrão de 1,01, indicando que os dados estão relativamente concentrados próximos à média. Isso demonstra que o desempenho geral dos alunos é estável, sem variações extremas muito acentuadas. A concentração dos valores em torno da faixa 7–8 indica que a maioria dos alunos apresenta desempenho considerado bom, com pequena dispersão entre os resultados.")
 
 def display_question_2(df):
-    st.header("Pergunta 2: Evolução Média do INDE e Volatilidade de Aprendizagem (IVA)")
-    st.markdown("***Analisar a evolução do Índice de Desenvolvimento do Aluno (INDE) ao longo dos anos e calcular o Índice de Volatilidade de Aprendizagem (IVA).***")
+    st.header("Pergunta 2: Desempenho acadêmico (IDA)")
+    st.markdown("***O desempenho acadêmico médio (IDA) está melhorando, estagnado ou caindo ao longo das fases e anos?***")
 
     # --- Evolução Média do INDE ---
     st.subheader("Evolução Média do INDE")
@@ -267,8 +270,8 @@ def display_question_2(df):
             st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_3(df):
-    st.header("Pergunta 3: Limiar de Eficiência do Engajamento")
-    st.markdown("***Analisar a relação entre o engajamento (IEG) e a ocorrência do 'Ponto de Virada' (PV) para identificar um limiar de IEG.***")
+    st.header("Engajamento nas atividades (IEG)")
+    st.markdown("***O grau de engajamento dos alunos (IEG) tem relação direta com seus indicadores de desempenho (IDA) e do ponto de virada (IPV)?***")
 
     # Calcula a média do INDE para os anos 2022, 2023 e 2024
     df["INDE_Media"] = df[["INDE 2022", "INDE 2023", "INDE 2024"]].mean(axis=1)
@@ -377,7 +380,7 @@ def display_question_3(df):
             st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_4(df):
-    st.header("Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)")
+    st.header("Pergunta 4: Autoavaliação (IAA)")
     st.markdown("***As percepções dos alunos sobre si mesmos (IAA) são coerentes com seu desempenho real (IDA) e engajamento (IEG)?***")
 
     df_clean_q4 = df.dropna(subset=["IAA", "IDA", "IEG"]).copy()
@@ -520,7 +523,7 @@ def display_question_4(df):
             st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_5(df):
-    st.header("Pergunta 5: Aspectos Psicossociais (IPS) e Quedas de Desempenho")
+    st.header("Pergunta 5: Aspectos Psicossociais (IPS)")
     st.markdown("***Há padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento?***")
 
     df['delta_INDE_22_23'] = df['INDE 2023'] - df['INDE 2022']
@@ -588,7 +591,7 @@ Com base nesses dados, por favor, forneça:
 
 
 def display_question_6(df):
-    st.header("Pergunta 6: Aspectos Psicopedagógicos (IPP) e Defasagem (IAN)")
+    st.header("Pergunta 6: Aspectos Psicopedagógicos (IPP)")
     st.markdown("***As avaliações psicopedagógicas (IPP) confirmam ou contradizem a defasagem identificada pelo IAN?***")
 
     df_clean_q6 = df.dropna(subset=["IPP", "IAN"]).copy()
@@ -687,8 +690,8 @@ def display_question_6(df):
             st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_7(df):
-    st.header("Pergunta 7: Simulador de Virada")
-    st.markdown("***Utilizar um modelo de Machine Learning para prever a probabilidade de um aluno atingir o 'Ponto de Virada' e permitir a simulação interativa.***")
+    st.header("Pergunta 7: Ponto de Virada")
+    st.markdown("***Quais comportamentos - acadêmicos, emocionais ou de engajamento - mais influenciam o IPV ao longo do tempo?***")
 
     required_cols_q7 = ["IDA", "IEG", "IPS", "IAA", "IPP", "N_Atingiu PV"]
     df_q7 = df.dropna(subset=required_cols_q7).copy()
@@ -907,8 +910,8 @@ def display_question_8(df):
             st.warning("Não foi possível gerar insights do Gemini. Verifique a configuração da API.")
 
 def display_question_9(df):
-    st.header("Pergunta 9: Modelo de Risco (Defasagem)")
-    st.markdown("***Utilizar um modelo de Machine Learning para prever o risco de defasagem e fornecer explicações sobre os fatores contribuintes.***")
+    st.header("Pergunta 9: Previsão de risco com Machine Learning")
+    st.markdown("***Quais padrões nos indicadores permitem identificar alunos em risco antes de queda no desempenho ou aumento da defasagem? Construa um modelo preditivo que mostre uma probabilidade do aluno ou aluna entrar em risco de defasagem.***")
 
     required_cols_q9 = ["IDA", "IEG", "IPS", "IAA", "IPP", "Defasagem"]
     df_q9 = df.dropna(subset=required_cols_q9).copy()
@@ -1070,8 +1073,8 @@ def display_question_9(df):
             st.warning("Não foi possível gerar insights com o Gemini. Verifique a configuração da API.")
 
 def display_question_10(df):
-    st.header("Pergunta 10: Índice de Valor Adicionado (IVA)")
-    st.markdown("***Analisar o \"Valor Adicionado\" gerado pela \"Passos Mágicos\" no desempenho dos alunos, segmentado por fase, e gerar insights para investidores.***")
+    st.header("Pergunta 10: Efetividade do programa")
+    st.markdown("***Os indicadores mostram melhora consistente ao longo do ciclo nas diferentes fases (Quartzo, Ágata, Ametista e Topázio), confirmando o impacto real do programa?***")
 
     inde_long = df.melt(
         id_vars=["RA", "Fase"],
@@ -1200,7 +1203,7 @@ def display_question_10(df):
 
 def display_question_11(df, numeric_cols_to_clean):
     st.header("Pergunta 11: Insights Adicionais e Criatividade")
-    st.markdown("***Utilize cruzamentos de dados não solicitados nas perguntas anteriores para gerar sugestões práticas que melhorem a operação da instituição.***")
+    st.markdown("***Utilizando cruzamentos de dados não solicitados nas perguntas anteriores para gerar sugestões práticas que melhorem a operação da instituição.***")
 
     df['INDE_Consolidado'] = df[numeric_cols_to_clean[-3:]].mean(axis=1, skipna=True)
 
@@ -1426,6 +1429,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
