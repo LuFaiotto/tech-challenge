@@ -1015,7 +1015,7 @@ def display_question_9(df):
         selected_ra = st.selectbox("Selecione um RA da fila de prioridade para ver os fatores contribuintes:", fila_prioridade['RA'].unique())
         if selected_ra:
             student_original_label = df_q9[df_q9['RA'] == selected_ra].index[0]
-            st.write(f"**Fatores Contribuintes para o aluno RA: {selected_ra}**")
+            st.write(f"**Fatores Contribuintes para o aluno: {selected_ra}**")
 
             if student_original_label not in shap_values_df.index:
                 st.warning(f"O RA {selected_ra} (índice original {student_original_label}) não foi encontrado no DataFrame de valores SHAP. Pode haver uma inconsistência nos dados ou na indexação.")
@@ -1339,17 +1339,17 @@ def main():
     st.sidebar.title("Navegação")
     page = st.sidebar.radio("Escolha uma Análise", [
         "Visão Geral",
-        "Pergunta 1",
-        "Pergunta 2",
-        "Pergunta 3",
-        "Pergunta 4",
-        "Pergunta 5",
-        "Pergunta 6",
-        "Pergunta 7",
-        "Pergunta 8",
-        "Pergunta 9",
-        "Pergunta 10",
-        "Pergunta 11"
+        "Pergunta 1: Adequação do nível (IAN)",
+        "Pergunta 2: Desempenho acadêmico (IDA)",
+        "Pergunta 3: Engajamento nas atividades (IEG)",
+        "Pergunta 4: Autoavaliação (IAA)",
+        "Pergunta 5: Aspectos Psicossociais (IPS)",
+        "Pergunta 6: Aspectos Psicopedagógicos (IPP)",
+        "Pergunta 7: Ponto de Virada (IPV)",
+        "Pergunta 8: Multidimensionalidade dos Indicadores",
+        "Pergunta 9: Previsão de Risco com Machine Learning",
+        "Pergunta 10: Efetividade do Programa",
+        "Pergunta 11: Insights e Criatividade"
     ])
 
     st.title("Análise de Dados de Performance Estudantil")
@@ -1368,98 +1368,65 @@ def main():
 
         st.markdown("#### Perguntas Chave e Principais Insights")
 
-        st.markdown("**Pergunta 1: Perfil de Defasagem (INDE 2024)**")
+        st.markdown("**Pergunta 1: Adequação do nível (IAN)**")
         st.write("Apresenta a distribuição do Índice de Desenvolvimento do Aluno (INDE) para o ano de 2024, juntamente com a média e o desvio padrão. Isso fornece uma visão geral do desempenho atual dos alunos.")
 
-        st.markdown("**Pergunta 2: Evolução Média do INDE e Volatilidade de Aprendizagem (IVA)**")
+        st.markdown("**Pergunta 2: Desempenho acadêmico (IDA)**")
         st.write("Analisa a evolução do INDE médio dos alunos ao longo dos anos (2022-2024) e calcula o Índice de Volatilidade de Aprendizagem (IVA) por Fase, identificando as fases com maior oscilação no desempenho. Insights do Gemini sugerem intervenções para estabilizar o desempenho.")
 
-        st.markdown("**Pergunta 3: Limiar de Eficiência do Engajamento**")
+        st.markdown("**Pergunta 3: Engajamento nas atividades (IEG)**")
         st.write("Examina a relação entre o Índice de Engajamento (IEG) e a probabilidade de um aluno atingir o 'Ponto de Virada' (IPV). Um limiar de IEG é sugerido para identificar alunos em risco, com alertas proativos para intervenções que visam aumentar o engajamento e o potencial de virada. Insights do Gemini oferecem estratégias de intervenção.")
 
-        st.markdown("**Pergunta 4: Autoavaliação (IAA) vs Desempenho Real (IDA) e Engajamento (IEG)**")
+        st.markdown("**Pergunta 4: Autoavaliação (IAA)**")
         st.write("Analisamos a coerência entre a percepção dos alunos sobre si mesmos e seu desempenho/engajamento. Correlações de Pearson e visualizações com linhas de 45 graus ajudam a identificar alunos superestimados, subestimados ou conscientes. Uma 'Matriz de Perfil Psico-Pedagógico' foi criada para categorizar alunos, com insights do Gemini para ações específicas.")
 
-        st.markdown("**Pergunta 5: Aspectos Psicossociais (IPS) e Quedas de Desempenho**")
+        st.markdown("**Pergunta 5: Aspectos Psicossociais (IPS)**")
         st.write("Investigamos se fatores psicossociais podem prever quedas no Índice de Desenvolvimento do Aluno (INDE). Calculamos deltas do INDE, correlações entre IPS e variações do INDE, e utilizamos testes T e regressões logísticas para identificar padrões. Os insights do Gemini oferecem recomendações para mitigar essas quedas.")
 
-        st.markdown("**Pergunta 6: Aspectos Psicopedagógicos (IPP) e Defasagem (IAN)**")
+        st.markdown("**Pergunta 6: Aspectos Psicopedagógicos (IPP)**")
         st.write("Comparamos avaliações psicopedagógicas (IPP) com o Índice de Atraso de Desenvolvimento (IAN) para entender se confirmam ou contradizem a defasagem. Coeficientes de Pearson e testes T foram utilizados, com visualizações de dispersão e box plots. O Gemini fornece insights sobre as implicações práticas dessa relação.")
 
-        st.markdown("**Pergunta 7: Simulador de Virada**")
+        st.markdown("**Pergunta 7: Ponto de Virada (IPV)**")
         st.write("Utiliza um modelo de Machine Learning (RandomForestClassifier) para prever a probabilidade de um aluno atingir o 'Ponto de Virada'. Inclui sliders interativos para simular o impacto de mudanças em indicadores como IDA, IEG, IPS, IAA e IPP na probabilidade. Insights do Gemini geram um 'Plano de Metas Individualizado' com sugestões práticas.")
 
         st.markdown("**Pergunta 8: Multidimensionalidade dos Indicadores**")
         st.write("Determinamos quais combinações de indicadores (IDA, IEG, IPS, IPP) mais influenciam a nota global (INDE). Um modelo de Regressão Linear (OLS) foi aplicado, e os alunos foram segmentados em grupos de 'Baixo INDE' e 'Alto INDE' para comparação de perfis através de gráficos de radar. Insights do Gemini sugerem as melhores alavancas para elevar o INDE.")
 
-        st.markdown("**Pergunta 9: Modelo de Risco (Defasagem)**")
+        st.markdown("**Pergunta 9: Previsão de Risco com Machine Learning**")
         st.write("Apresenta um modelo de Machine Learning (RandomForestClassifier) para prever o risco de defasagem dos alunos, com métricas como AUC e curva ROC. A integração com SHAP permite a explicabilidade do modelo, mostrando os fatores que mais contribuem para o risco de cada aluno. Uma 'Fila de Prioridade' é gerada, e o Gemini oferece recomendações personalizadas para intervenção.")
 
-        st.markdown("**Pergunta 10: Índice de Valor Adicionado (IVA)**")
+        st.markdown("**Pergunta 10: Efetividade do Programa**")
         st.write("Calcula o Índice de Valor Adicionado (IVA) para os alunos, medindo o progresso de desempenho em relação à média esperada para sua fase. Visualiza a evolução do INDE por fase e apresenta um 'Selo de Impacto' com o IVA geral da instituição, gerando insights do Gemini para atrair investidores e comprovar a eficácia do método.")
 
-        st.markdown("**Pergunta 11: Insights Adicionais e Criatividade**")
+        st.markdown("**Pergunta 11: Insights e Criatividade**")
         st.write("Geramos sugestões práticas adicionais através de cruzamentos de dados. Isso incluiu a consolidação do INDE, análise de desempenho por tipo de instituição de ensino (pública vs. privada) e uma análise de palavras-chave nos destaques dos alunos para identificar desafios comuns. O Gemini compilou recomendações estratégicas baseadas nesses insights.")
 
         st.markdown("#### Conclusão")
         st.write("Este dashboard serve como uma ferramenta poderosa para a Passos Mágicos, convertendo dados brutos em inteligência acionável para apoiar seus alunos de forma mais eficaz e otimizar suas estratégias educacionais.")
 
-    elif page == "Pergunta 1":
+    elif page == "Pergunta 1: Adequação do nível (IAN)":
         display_question_1(df)
-    elif page == "Pergunta 2":
+    elif page == "Pergunta 2: Desempenho acadêmico (IDA)":
         display_question_2(df)
-    elif page == "Pergunta 3":
+    elif page == "Pergunta 3: Engajamento nas atividades (IEG)":
         display_question_3(df)
-    elif page == "Pergunta 4":
+    elif page == "Pergunta 4: Autoavaliação (IAA)":
         display_question_4(df)
-    elif page == "Pergunta 5":
+    elif page == "Pergunta 5: Aspectos Psicossociais (IPS)":
         display_question_5(df)
-    elif page == "Pergunta 6":
+    elif page == "Pergunta 6: Aspectos Psicopedagógicos (IPP)":
         display_question_6(df)
-    elif page == "Pergunta 7":
+    elif page == "Pergunta 7: Ponto de Virada (IPV)":
         display_question_7(df)
-    elif page == "Pergunta 8":
+    elif page == "Pergunta 8: Multidimensionalidade dos Indicadores":
         display_question_8(df)
-    elif page == "Pergunta 9":
+    elif page == "Pergunta 9: Previsão de Risco com Machine Learning":
         display_question_9(df)
-    elif page == "Pergunta 10":
+    elif page == "Pergunta 10: Efetividade do Programa":
         display_question_10(df)
-    elif page == "Pergunta 11":
+    elif page == "Pergunta 11: Insights e Criatividade":
         display_question_11(df, numeric_cols_to_clean)
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
