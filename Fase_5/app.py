@@ -97,6 +97,9 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
     ips_mean_stats = data.groupby(queda_col)[ips_col].agg(['count', 'mean', 'std'])
     st.dataframe(ips_mean_stats)
     results_for_prompt['ips_mean_stats'] = ips_mean_stats.to_string()
+    st.markdown("""
+    Esta tabela compara a média, desvio padrão e contagem de alunos do IPS entre os grupos que sofreram queda de desempenho e os que não. Uma diferença significativa nas médias pode indicar que o IPS está relacionado com a ocorrência de quedas.
+    """)
 
     grp1 = data.loc[data[queda_col] == True, ips_col].dropna()
     grp0 = data.loc[data[queda_col] == False, ips_col].dropna()
@@ -104,6 +107,9 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
         tstat, pval = ttest_ind(grp1, grp0, equal_var=False)
         st.write(f"**Teste T de IPS (queda vs. sem queda):** t = {tstat:.3f}, p = {pval:.4f}")
         results_for_prompt['ttest_results'] = f"t = {tstat:.3f}, p = {pval:.4f}"
+        st.markdown(f"""
+        O Teste T avalia se a diferença nas médias de IPS entre os grupos com e sem queda é estatisticamente significativa. Um valor-p baixo (geralmente < 0.05) sugere que a diferença observada é improvável de ter ocorrido por acaso.
+        """)
     else:
         st.write(f"Não há dados suficientes para realizar o Teste T para {year_pair_str}.")
         results_for_prompt['ttest_results'] = f"Não há dados suficientes para realizar o Teste T para {year_pair_str}."
@@ -129,6 +135,9 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
             st.dataframe(summary_df.applymap(lambda x: f'{x:.3f}'))
             
             results_for_prompt['logit_summary'] = summary_df.applymap(lambda x: f'{x:.3f}').to_string()
+            st.markdown("""
+            A Regressão Logística modela a probabilidade de ocorrência de queda. Os coeficientes indicam a direção e a força da relação de cada variável com a chance de queda. Coeficientes negativos para o IPS, por exemplo, sugerem que um IPS mais alto está associado a uma menor probabilidade de queda, controlando por outras variáveis. Os p-valores indicam a significância estatística de cada coeficiente.
+            """)
         except Exception as e:
             st.write(f"Erro ao executar a Regressão Logística para {year_pair_str}: {e}")
             results_for_prompt['logit_summary'] = f"Erro ao executar a Regressão Logística: {e}"
@@ -147,6 +156,9 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
     ax1.legend(title=f'Queda {year_pair_str}', loc='best')
     st.pyplot(fig1)
     plt.close(fig1)
+    st.markdown("""
+    O gráfico de dispersão mostra a relação entre o IPS e a mudança no INDE. Pontos abaixo da linha horizontal de zero indicam uma queda no INDE. A linha de regressão (cinza tracejada) mostra a tendência geral. Se o IPS estiver negativamente correlacionado com a queda, esperamos ver mais pontos vermelhos (queda) com valores mais baixos de IPS, e vice-versa.
+    """)
 
     fig2, ax2 = plt.subplots(figsize=(8, 6))
     sns.boxplot(data=data, x=queda_col, y=ips_col, hue=queda_col, palette='pastel', legend=False, ax=ax2)
@@ -156,6 +168,9 @@ def analyze_and_plot_queda_streamlit(data, year_pair_str, ips_col='IPS', other_c
     ax2.grid(axis='y', linestyle='--', alpha=0.6)
     st.pyplot(fig2)
     plt.close(fig2)
+    st.markdown("""
+    Este gráfico compara a distribuição do IPS para alunos que tiveram uma queda de desempenho (Verdadeiro) e aqueles que não tiveram (Falso). As caixas mostram a mediana, quartis e possíveis outliers, permitindo visualizar a diferença na distribuição do IPS entre os dois grupos.
+    """)
 
     return results_for_prompt
 
@@ -525,6 +540,9 @@ def display_question_4(df):
 def display_question_5(df):
     st.header("Pergunta 5: Aspectos Psicossociais (IPS)")
     st.markdown("***Há padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento?***")
+    st.markdown("""
+    Nesta seção, investigamos se os **Aspectos Psicossociais (IPS)** dos alunos podem estar relacionados com **quedas no Índice de Desenvolvimento do Aluno (INDE)**. Entender essa relação é fundamental para intervenções proativas que apoiem não apenas o desempenho acadêmico, mas também o bem-estar geral do estudante.
+    """)
 
     df['delta_INDE_22_23'] = df['INDE 2023'] - df['INDE 2022']
     df['delta_INDE_23_24'] = df['INDE 2024'] - df['INDE 2023']
@@ -536,6 +554,9 @@ def display_question_5(df):
     corr_ips_delta = df[['IPS', 'delta_INDE_22_23', 'delta_INDE_23_24']].corr()
     st.subheader("Correlação (IPS vs variações no INDE):")
     st.dataframe(corr_ips_delta['IPS'])
+    st.markdown("""
+    Os coeficientes de correlação mostram a força e a direção da relação linear entre o IPS e as variações do INDE. Um valor positivo indica que, conforme o IPS aumenta, a variação do INDE também tende a aumentar (ou seja, menos quedas ou mais ganhos). Um valor negativo sugere o oposto.
+    """)
 
     corr_ips_delta_str = corr_ips_delta['IPS'].to_string()
 
@@ -593,6 +614,9 @@ Com base nesses dados, por favor, forneça:
 def display_question_6(df):
     st.header("Pergunta 6: Aspectos Psicopedagógicos (IPP)")
     st.markdown("***As avaliações psicopedagógicas (IPP) confirmam ou contradizem a defasagem identificada pelo IAN?***")
+    st.markdown("""
+    Nesta seção, investigamos se os **Aspectos Psicossociais (IPS)** dos alunos podem estar relacionados com **quedas no Índice de Desenvolvimento do Aluno (INDE)**. Entender essa relação é fundamental para intervenções proativas que apoiem não apenas o desempenho acadêmico, mas também o bem-estar geral do estudante.
+    """)
 
     df_clean_q6 = df.dropna(subset=["IPP", "IAN"]).copy()
 
@@ -602,6 +626,9 @@ def display_question_6(df):
     st.subheader("Análise de Correlação")
     st.write(f"- **Correlação de Pearson entre IPP e IAN**: {correlation_ipp_ian:.3f}")
     st.write(f"- **Valor-P**: {p_value_ipp_ian:.3f}")
+    st.markdown("""
+    O coeficiente de correlação de Pearson indica a força e a direção da relação linear entre o IPP e o IAN. Um valor próximo de 1 ou -1 sugere uma forte relação, enquanto um valor próximo de 0 indica uma relação fraca. O valor-P ajuda a determinar a significância estatística dessa correlação.
+    """)
 
     median_ian = df_clean_q6['IAN'].median()
     st.write(f"- **Mediana do IAN**: {median_ian:.2f}")
@@ -609,6 +636,9 @@ def display_question_6(df):
     df_clean_q6['IAN_category'] = df_clean_q6['IAN'].apply(lambda x: 'Baixo IAN' if x <= median_ian else 'Alto IAN')
     st.subheader("Categorização do IAN")
     st.dataframe(df_clean_q6[['IAN', 'IAN_category']].head())
+    st.markdown("""
+    Dividimos os alunos em 'Baixo IAN' e 'Alto IAN' com base na mediana. Isso nos permite comparar as avaliações psicopedagógicas (IPP) entre grupos com diferentes níveis de atraso de desenvolvimento, facilitando a identificação de padrões.
+    """)
 
     ipp_low_ian = df_clean_q6.loc[df_clean_q6['IAN_category'] == 'Baixo IAN', 'IPP']
     ipp_high_ian = df_clean_q6.loc[df_clean_q6['IAN_category'] == 'Alto IAN', 'IPP']
@@ -626,6 +656,9 @@ def display_question_6(df):
 
         st.write(f"- **IPP Médio para o grupo 'Baixo IAN'**: {mean_ipp_low_ian:.3f}")
         st.write(f"- **IPP Médio para o grupo 'Alto IAN'**: {mean_ipp_high_ian:.3f}")
+        st.markdown("""
+        O Teste T nos diz se a diferença nas médias do IPP entre os grupos 'Baixo IAN' e 'Alto IAN' é estatisticamente significativa. Um valor-P baixo (geralmente < 0.05) sugere que existe uma diferença real, não apenas uma flutuação aleatória, confirmando ou contradizendo a relação esperada entre IPP e IAN.
+        """)
     else:
         st.write("Não há dados suficientes para realizar o Teste T.")
 
@@ -640,6 +673,9 @@ def display_question_6(df):
     ax1.grid(True, linestyle='--', alpha=0.6)
     st.pyplot(fig1)
     plt.close(fig1)
+    st.markdown("""
+    Este gráfico de dispersão visualiza a relação direta entre as avaliações psicopedagógicas (IPP) e o índice de atraso de desenvolvimento (IAN). Podemos observar a tendência dos pontos: se alunos com IAN mais alto tendem a ter IPP mais baixos (ou vice-versa), indicando uma coerência entre as métricas.
+    """)
 
     # Box Plot de IPP por Categoria de IAN
     fig2, ax2 = plt.subplots(figsize=(8, 6))
@@ -650,6 +686,9 @@ def display_question_6(df):
     ax2.grid(axis='y', linestyle='--', alpha=0.6)
     st.pyplot(fig2)
     plt.close(fig2)
+    st.markdown("""
+    O gráfico compara a distribuição do IPP para alunos categorizados com 'Baixo IAN' e 'Alto IAN'. As caixas mostram a mediana, quartis e possíveis outliers, permitindo uma clara visualização das diferenças no perfil psicopedagógico entre os grupos com menor e maior atraso de desenvolvimento.
+    """)
 
     # --- Geração de Insights com a API do Gemini ---
 
@@ -806,11 +845,14 @@ def display_question_8(df):
     results_df['Coeficiente'] = results_df['Coeficiente'].map('{:,.3f}'.format)
     results_df['P-valor'] = results_df['P-valor'].map('{:,.3f}'.format)
     st.dataframe(results_df)
-
+    
     st.write(f"- **R-quadrado**: {regression_model.rsquared:.3f}")
     st.write(f"- **R-quadrado Ajustado**: {regression_model.rsquared_adj:.3f}")
 
     ols_summary_text = regression_model.summary().as_text() # Capturar para o prompt, se necessário
+    st.markdown("""
+    Este sumário apresenta os resultados da regressão linear. O **R-quadrado** indica a proporção da variância do INDE 2023 que é explicada pelos indicadores. Os **coeficientes (coef)** mostram a direção e a magnitude do impacto de cada indicador no INDE. Um coeficiente positivo significa que o aumento do indicador está associado ao aumento do INDE, e vice-versa. O **P>|t|** (p-valor) indica a significância estatística de cada coeficiente; valores menores que 0.05 geralmente sugerem que o indicador tem um efeito significativo no INDE.
+    """)
 
     q1_inde_2023 = df_regression_q8['INDE 2023'].quantile(0.25)
     q3_inde_2023 = df_regression_q8['INDE 2023'].quantile(0.75)
@@ -818,6 +860,10 @@ def display_question_8(df):
     st.subheader("Análise de Percentis do INDE 2023")
     st.write(f"- **25º percentil (Q1) do INDE 2023**: {q1_inde_2023:.2f}")
     st.write(f"- **75º percentil (Q3) do INDE 2023**: {q3_inde_2023:.2f}")
+
+    st.markdown("""
+    Utilizamos o 25º e 75º percentis do INDE 2023 para categorizar os alunos, respectivamente, em grupos de 'Baixo INDE' e 'Alto INDE'. Essa segmentação nos permite comparar os perfis de indicadores de alunos com desempenho inferior e superior.
+    """)
 
     low_inde_students = df_regression_q8[df_regression_q8['INDE 2023'] <= q1_inde_2023].copy()
     high_inde_students = df_regression_q8[df_regression_q8['INDE 2023'] >= q3_inde_2023].copy()
@@ -849,6 +895,9 @@ def display_question_8(df):
     st.subheader("Médias Normalizadas dos Indicadores para grupos 'Baixo INDE' vs 'Alto INDE':")
     st.dataframe(comparison_df)
     comparison_df_str = comparison_df.to_string()
+    st.markdown("""
+    Esta tabela exibe as médias normalizadas dos indicadores para os grupos de 'Baixo INDE' e 'Alto INDE'. A normalização (escala de 0 a 1) permite uma comparação justa entre indicadores com diferentes escalas originais. Podemos observar quais indicadores são consistentemente mais altos no grupo de 'Alto INDE', indicando áreas de força para o sucesso acadêmico.
+    """)
 
     # Gráfico de Radar
     indicators = comparison_df.index.tolist()
@@ -877,6 +926,9 @@ def display_question_8(df):
     ax.legend(loc='upper right', bbox_to_anchor=(1.2, 1.1), fontsize=10)
     st.pyplot(fig)
     plt.close(fig)
+    st.markdown("""
+    O gráfico de radar visualiza o perfil médio dos indicadores para os alunos de 'Baixo INDE' e 'Alto INDE'. As áreas sombreadas permitem uma comparação rápida das forças e fraquezas de cada grupo em relação aos diferentes indicadores. Quanto maior a área coberta por um grupo, maior sua pontuação média nos indicadores correspondentes. Isso ajuda a identificar visualmente quais indicadores precisam de maior atenção para elevar o desempenho dos alunos com 'Baixo INDE'.
+    """)
 
     # --- Geração de Insights com a API do Gemini ---
 
@@ -1210,6 +1262,9 @@ def display_question_11(df, numeric_cols_to_clean):
     st.subheader("Análise do INDE Consolidado por Tipo de Escola")
     st.write("5 primeiras linhas com 'INDE 2022', 'INDE 2023', 'INDE 2024' e 'INDE_Consolidado':")
     st.dataframe(df[numeric_cols_to_clean[-3:] + ['INDE_Consolidado']].head())
+    st.markdown("""
+    O INDE Consolidado é a média dos índices de desempenho dos anos 2022, 2023 e 2024. Esta consolidação oferece uma visão mais estável e abrangente do desempenho geral do aluno ao longo do tempo.
+    """)
 
     df_clean_school = df.copy()
     df_clean_school['IE'] = df_clean_school['IE'].astype(str).str.strip().str.lower()
@@ -1227,12 +1282,18 @@ def display_question_11(df, numeric_cols_to_clean):
     st.write("Valores únicos na coluna 'IE_Limpo' e suas contagens após a limpeza:")
     st.dataframe(df_clean_school['IE_Limpo'].value_counts())
     ie_counts_str = df_clean_school['IE_Limpo'].value_counts().to_string()
+    st.markdown("""
+    A limpeza e padronização da coluna 'IE' (Instituição de Ensino) permite agrupar e analisar o desempenho dos alunos por tipo de escola, como 'Pública' ou 'Privada'. Isso revela a distribuição da nossa base de alunos entre os diferentes tipos de instituições e pode indicar se a 'Passos Mágicos' atende majoritariamente a um tipo específico de escola.
+    """)
 
     school_inde_stats = df_clean_school.groupby('IE_Limpo')['INDE_Consolidado'].agg(['mean', 'std', 'count'])
 
     st.subheader("Estatísticas Agregadas do INDE Consolidado por Tipo de Escola:")
     st.dataframe(school_inde_stats)
     school_inde_stats_str = school_inde_stats.to_string()
+    st.markdown("""
+    Esta tabela detalha a média, desvio padrão e contagem de alunos do INDE Consolidado para cada tipo de escola. Diferenças nas médias podem apontar para a necessidade de abordagens distintas ou revelar onde a 'Passos Mágicos' tem maior ou menor impacto.
+    """)
 
     # Gráfico de Barras: Média do INDE Consolidado por Tipo de Escola
     fig_bar, ax_bar = plt.subplots(figsize=(10, 6))
@@ -1246,6 +1307,9 @@ def display_question_11(df, numeric_cols_to_clean):
     plt.tight_layout()
     st.pyplot(fig_bar)
     plt.close(fig_bar)
+    st.markdown("""
+    A visualização gráfica da média do INDE Consolidado por tipo de escola facilita a comparação visual do desempenho entre os alunos de escolas públicas, privadas e outros. Pode-se inferir se há um tipo de escola onde os alunos, em média, apresentam um INDE mais alto ou mais baixo, o que pode direcionar estratégias de engajamento ou apoio.
+    """)
 
     st.subheader("Análise de Palavras-Chave nos Destaques")
     df_keywords = df.copy()
@@ -1282,7 +1346,10 @@ def display_question_11(df, numeric_cols_to_clean):
         st.write("  Nenhuma das palavras-chave definidas foi encontrada nos destaques.")
         keyword_counts_str = "Nenhuma palavra-chave definida foi encontrada."
     st.markdown("  <small><i>(Nota: A extração de palavras-chave literais pode ser limitada; uma análise de texto mais sofisticada pode ser necessária para insights mais profundos de sentenças.)</i></small>", unsafe_allow_html=True)
-
+    st.markdown("""
+    A análise de palavras-chave nos campos 'Destaque IEG' e 'Destaque IDA' revela termos comuns que os alunos mencionam. Essas palavras-chave podem indicar desafios ou necessidades recorrentes (ex: 'família', 'internet', 'fome', 'saúde'), fornecendo pistas qualitativas sobre fatores que impactam o engajamento e o desempenho dos alunos. A frequência de cada palavra-chave destaca as preocupações mais presentes.
+    """)
+    
     school_inde_treemap = school_inde_stats.reset_index()
     school_inde_treemap.columns = ['Tipo_Escola', 'Media_INDE', 'Desvio_Padrao_INDE', 'Contagem_Alunos']
 
@@ -1298,6 +1365,9 @@ def display_question_11(df, numeric_cols_to_clean):
 
     fig_treemap.update_traces(textfont_size=14)
     st.plotly_chart(fig_treemap)
+    st.markdown("""
+    O treemap visualiza a distribuição dos alunos por tipo de escola e a média do INDE Consolidado. O tamanho de cada caixa representa o número de alunos, enquanto a cor pode indicar a média do INDE. Isso permite identificar rapidamente onde a 'Passos Mágicos' tem a maior concentração de alunos e como o desempenho médio se distribui entre esses grupos, complementando o gráfico de barras.
+    """)
 
     # --- Geração de Insights com a API do Gemini ---
 
@@ -1429,4 +1499,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
