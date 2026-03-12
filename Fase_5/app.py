@@ -24,6 +24,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+st.set_page_config(sidebar_width="300px")
+
 numeric_cols_to_clean = [
     "IAA", "IDA", "IEG", "IPS", "IPV", "IPP", "IAN",
     "INDE 2022", "INDE 2023", "INDE 2024"
@@ -1499,5 +1501,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
