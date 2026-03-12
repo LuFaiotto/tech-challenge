@@ -21,10 +21,12 @@ import google.generativeai as genai
 st.markdown("""
     <style>
     p {text-align: justify;}
+
+    section[data-testid="stSidebar"] {
+        width: 350px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
-
-st.set_page_config(sidebar_width="300px")
 
 numeric_cols_to_clean = [
     "IAA", "IDA", "IEG", "IPS", "IPV", "IPP", "IAN",
@@ -1501,6 +1503,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
