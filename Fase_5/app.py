@@ -23,7 +23,7 @@ st.markdown("""
     p {text-align: justify;}
 
     section[data-testid="stSidebar"] {
-        width: 440px !important;
+        width: 430px !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -1503,6 +1503,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
