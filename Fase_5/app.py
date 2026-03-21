@@ -64,7 +64,7 @@ def generate_gemini_insights(prompt):
     try:
         model = genai.GenerativeModel('gemini-2.5-flash')
         response = model.generate_content(prompt)
-        # Verifica se há conteúdo na resposta antes de tentar acessá-lo
+        
         if response.candidates:
             return response.candidates[0].content.parts[0].text
         else:
@@ -253,7 +253,6 @@ def display_question_2(df):
         fase_maior_oscilacao = None
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini sobre a Evolução do INDE e Volatilidade")
 
     prompt_gemini = f"""
     Analise a evolução média do Índice de Desenvolvimento do Aluno (INDE) ao longo de 2022, 2023 e 2024, e o Índice de Volatilidade de Aprendizagem (IVA) por Fase, com base nos seguintes dados:
@@ -370,7 +369,6 @@ def display_question_3(df):
         st.info("Não foi possível determinar um limiar numérico claro de IEG para o alerta.")
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights do Gemini sobre o Limiar de Eficiência do Engajamento")
 
     prompt_gemini = f"""
     Analise a relação entre o engajamento (IEG) e a ocorrência do 'Ponto de Virada' (PV) de alunos, com base nos seguintes resultados:
@@ -570,40 +568,40 @@ def display_question_5(df):
     # --- Geração de Insights com a API do Gemini ---
 
     prompt_gemini = f"""
-Analise os padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento, com base nos seguintes resultados:
-
-**1. Correlação entre IPS e Variações no INDE:**
-```
-{corr_ips_delta_str}
-```
-
-**2. Análise para a Queda 22_23:**
-- **IPS médio (queda 22_23 vs. sem queda):**
-```
-{results_22_23.get('ips_mean_stats', 'N/A')}
-```
-- **Teste T de IPS (queda vs. sem queda):** {results_22_23.get('ttest_results', 'N/A')}
-- **Regressão Logística (queda_22_23 ~ IPS + covariáveis):**
-```
-{results_22_23.get('logit_summary', 'N/A')}
-```
-
-**3. Análise para a Queda 23_24:**
-- **IPS médio (queda 23_24 vs. sem queda):**
-```
-{results_23_24.get('ips_mean_stats', 'N/A')}
-```
-- **Teste T de IPS (queda vs. sem queda):** {results_23_24.get('ttest_results', 'N/A')}
-- **Regressão Logística (queda_23_24 ~ IPS + covariáveis):**
-```
-{results_23_24.get('logit_summary', 'N/A')}
-```
-
-Com base nesses dados, por favor, forneça:
-1. Uma análise concisa de como os aspectos psicossociais (IPS) se relacionam com as quedas no Índice de Desenvolvimento do Aluno (INDE) em diferentes períodos.
-2. Identifique quais indicadores psicossociais (se houver, a partir da regressão logística) são mais preditivos de uma queda de desempenho.
-3. Sugira ações estratégicas e intervenções práticas que a instituição 'Passos Mágicos' pode implementar para mitigar quedas de desempenho, considerando os insights dos dados.
-4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
+    Analise os padrões psicossociais (IPS) que antecedem quedas de desempenho acadêmico ou de engajamento, com base nos seguintes resultados:
+    
+    **1. Correlação entre IPS e Variações no INDE:**
+    ```
+    {corr_ips_delta_str}
+    ```
+    
+    **2. Análise para a Queda 22_23:**
+    - **IPS médio (queda 22_23 vs. sem queda):**
+    ```
+    {results_22_23.get('ips_mean_stats', 'N/A')}
+    ```
+    - **Teste T de IPS (queda vs. sem queda):** {results_22_23.get('ttest_results', 'N/A')}
+    - **Regressão Logística (queda_22_23 ~ IPS + covariáveis):**
+    ```
+    {results_22_23.get('logit_summary', 'N/A')}
+    ```
+    
+    **3. Análise para a Queda 23_24:**
+    - **IPS médio (queda 23_24 vs. sem queda):**
+    ```
+    {results_23_24.get('ips_mean_stats', 'N/A')}
+    ```
+    - **Teste T de IPS (queda vs. sem queda):** {results_23_24.get('ttest_results', 'N/A')}
+    - **Regressão Logística (queda_23_24 ~ IPS + covariáveis):**
+    ```
+    {results_23_24.get('logit_summary', 'N/A')}
+    ```
+    
+    Com base nesses dados, por favor, forneça:
+    1. Uma análise concisa de como os aspectos psicossociais (IPS) se relacionam com as quedas no Índice de Desenvolvimento do Aluno (INDE) em diferentes períodos.
+    2. Identifique quais indicadores psicossociais (se houver, a partir da regressão logística) são mais preditivos de uma queda de desempenho.
+    3. Sugira ações estratégicas e intervenções práticas que a instituição 'Passos Mágicos' pode implementar para mitigar quedas de desempenho, considerando os insights dos dados.
+    4. Formule a resposta de forma clara e objetiva, adequada para educadores e gestores, utilizando tópicos ou listas para facilitar a leitura.
     """
 
     if st.button("Gerar Insights Adicionais"):
@@ -780,7 +778,7 @@ def display_question_7(df):
     st.subheader("Simulador Interativo do Ponto de Virada")
     st.markdown("Ajuste os indicadores abaixo para ver como eles influenciam a probabilidade de um aluno atingir o 'Ponto de Virada'.")
 
-    # Sliders para os indicadores com faixa de 0 a 10
+    # Sliders
     ida_sim = st.slider("IDA (Desempenho Acadêmico)", min_value=0.0, max_value=10.0, value=float(df_q7['IDA'].mean()))
     ieg_sim = st.slider("IEG (Engajamento)", min_value=0.0, max_value=10.0, value=float(df_q7['IEG'].mean()))
     ips_sim = st.slider("IPS (Aspectos Psicossociais)", min_value=0.0, max_value=10.0, value=float(df_q7['IPS'].mean()))
@@ -853,7 +851,7 @@ def display_question_8(df):
     st.write(f"- **R-quadrado**: {regression_model.rsquared:.3f}")
     st.write(f"- **R-quadrado Ajustado**: {regression_model.rsquared_adj:.3f}")
 
-    ols_summary_text = regression_model.summary().as_text() # Capturar para o prompt, se necessário
+    ols_summary_text = regression_model.summary().as_text()
     st.markdown("""
     Este sumário apresenta os resultados da regressão linear. O **R-quadrado** indica a proporção da variância do INDE 2023 que é explicada pelos indicadores. Os **coeficientes (coef)** mostram a direção e a magnitude do impacto de cada indicador no INDE. Um coeficiente positivo significa que o aumento do indicador está associado ao aumento do INDE, e vice-versa. O **P>|t|** (p-valor) indica a significância estatística de cada coeficiente; valores menores que 0.05 geralmente sugerem que o indicador tem um efeito significativo no INDE.
     """)
@@ -977,7 +975,7 @@ def display_question_9(df):
         return
 
     df_q9["Em_Risco"] = np.where(
-        df_q9["Defasagem"] > df_q9["Defasagem"].median(), # Assumindo que defasagem maior que a mediana é 'Em Risco'
+        df_q9["Defasagem"] > df_q9["Defasagem"].median(), 
         1,
         0
     )
@@ -1100,7 +1098,6 @@ def display_question_9(df):
         st.info("A fila de prioridade está vazia para seleção.")
 
     # --- Geração de Insights com a API do Gemini ---
-    # st.subheader("Insights e Recomendações para Alunos de Alto Risco (via Gemini)")
 
     prompt_gemini = f"""
     Analise o modelo de risco de defasagem, a fila de prioridade de alunos e os fatores contribuintes (SHAP values) para os top alunos em risco.
@@ -1222,7 +1219,6 @@ def display_question_10(df):
     """)
 
     # --- Geração de Insights com a API do Gemini para Investidores ---
-    # st.subheader("Insights do Gemini para Investidores")
 
     prompt_gemini = f"""
     Prepare um resumo executivo para potenciais investidores, destacando o "Valor Adicionado" que a "Passos Mágicos" gera no desempenho dos alunos. Utilize os seguintes dados:
