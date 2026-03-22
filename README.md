@@ -12,10 +12,13 @@ O repositório foi criado para agrupar todos os desafios realizados na pós-grad
 - [Link da apresentação dos modelos](https://www.youtube.com/watch?v=AwJ0dbIeH4o)
 
 ## Fase 4
+
+O link do dashboard sobre obesidade no Power BI foi desativado em março/2026
+
 - [Página Inicial - Fase 4](https://lufaiotto.github.io/tech-challenge/Fase_4/)
 - ~[Link do Dashboard sobre Obesidade](https://app.powerbi.com/view?r=eyJrIjoiZGQ4NDc5ZTctZTg4Mi00ZTI1LTkyNzctZmExOWM5MzdlODFlIiwidCI6IjFjMDE5MTkyLWI1NDItNDI4Zi05MDQyLWE0NzdiNTk1ZjVjMyJ9)~ (link desativado)
 - [Link do Formulário de Predição no Streamlit](https://tech-challenge-fase4-obesidade.streamlit.app)
 - [Link da apresentação](https://youtu.be/aGr4Ih86w4E)
 
 ## Fase 5
-- [Link do Streamlit](https://tech-challenge-fase5.streamlit.app)
+- [Link da Análise](https://tech-challenge-fase5.streamlit.app)
