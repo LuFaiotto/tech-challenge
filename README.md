@@ -18,7 +18,8 @@ O link do dashboard sobre obesidade no Power BI foi desativado em março/2026
 - [Página Inicial - Fase 4](https://lufaiotto.github.io/tech-challenge/Fase_4/)
 - ~[Link do Dashboard sobre Obesidade](https://app.powerbi.com/view?r=eyJrIjoiZGQ4NDc5ZTctZTg4Mi00ZTI1LTkyNzctZmExOWM5MzdlODFlIiwidCI6IjFjMDE5MTkyLWI1NDItNDI4Zi05MDQyLWE0NzdiNTk1ZjVjMyJ9)~ (link desativado)
 - [Link do Formulário de Predição no Streamlit](https://tech-challenge-fase4-obesidade.streamlit.app)
-- [Link da apresentação](https://youtu.be/aGr4Ih86w4E)
+- [Link da Apresentação](https://youtu.be/aGr4Ih86w4E)
 
 ## Fase 5
-- [Link da Análise](https://tech-challenge-fase5.streamlit.app)
+- [Link da Aplicação](https://tech-challenge-fase5.streamlit.app)
+- [Link da Apresentação](https://www.youtube.com/watch?v=sDn-JIxzPqg)
